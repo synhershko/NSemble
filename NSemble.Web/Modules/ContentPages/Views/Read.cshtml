@@ -1,0 +1,10 @@
+﻿@using NSemble.Core.Extensions
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+
+@{
+    Layout = "_Layout.cshtml";
+}
+
+<h2>@Model.ContentPage.Title</h2>
+
+<div>@DynamicContentHelpers.CompiledContent(Model.ContentPage)</div>

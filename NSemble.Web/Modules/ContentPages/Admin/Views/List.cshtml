@@ -1,0 +1,15 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<NSemble.Modules.ContentPages.Models.ContentPage[]>
+
+<h1>List of content pages</h1>
+
+@if (Model.Length == 0)
+{
+    <p>No pages to display</p>
+
+} else
+{
+    foreach (var cp in Model)
+    {
+        <p>@cp.Title</p>
+    }
+}

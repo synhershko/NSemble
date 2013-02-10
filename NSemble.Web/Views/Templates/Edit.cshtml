@@ -1,0 +1,45 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<NSemble.Core.Models.ViewTemplate>
+
+@{
+  Layout = "_AdminLayout.cshtml";
+}
+
+<h2>Editing template</h2>
+
+<form method="post">
+    <fieldset>
+		<legend>View Template</legend>
+
+		<div class="editor-label">
+			Location
+		</div>
+        <div class="editor-field">
+            <input type="text" name="Location" value="@Model.Location" />
+        </div>
+        
+        <div class="editor-label">
+			Name
+		</div>
+        <div class="editor-field">
+            <input type="text" name="Name" value="@Model.Name" />
+        </div>
+        
+        <div class="editor-label">
+			Extension
+		</div>
+        <div class="editor-field">
+            <input type="text" name="Extension" value="@Model.Extension" />
+        </div>
+        
+        <div class="editor-label">
+			Template contents
+		</div>
+        <div class="editor-field">
+            <textarea name="Contents">@Model.Contents</textarea>
+        </div>
+
+        <p>
+			<input type="submit" value="Save" />
+		</p>
+	</fieldset>
+</form>

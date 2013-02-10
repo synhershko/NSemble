@@ -1,0 +1,62 @@
+﻿@{
+        //﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+        //Bundles.Reference("assets/stylesheets/main.css");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>NSemble - assemble your webapp :: Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script type="text/javascript" src="/Content/Scripts/jquery-1.8.3.min.js"></script>
+    <link href="/Content/bootstrap.min.css" rel="stylesheet">
+    <link href="/Content/bootstrap-responsive.min.css" rel="stylesheet">
+
+    @RenderSection("HeadArea", required: false)
+</head>
+    <body>
+        <header class="subhead">
+            <div class="container">
+                <h1>NSemble :: Admin</h1>
+            </div>
+        </header>
+
+        <div class="container">
+            @RenderBody()
+
+
+            <br />
+            <br />
+
+            @if (false)
+            {
+                <div class="row">
+                    <div class="span12">
+                        <div class="alert alert-error">
+                            <a class="close">&times;</a>
+                            <h4 class="alert-heading">Error</h4>
+                            <p>Error message</p>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <hr>
+
+            <footer id="footer">
+                <p class="pull-right"><a href="#">Back to top</a></p>
+                <div class="links">
+                    <a href="/admin/home">Admin home</a>
+                </div>
+                <a href="https://github.com/synhershko/NSemble" target="_blank">NSemble</a> - assemble this.
+            </footer>
+
+        </div>
+    </body>
+</html>

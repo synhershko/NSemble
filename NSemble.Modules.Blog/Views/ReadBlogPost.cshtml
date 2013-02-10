@@ -1,0 +1,8 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{
+    Layout = "_BlogLayout.cshtml";
+}
+
+<h3>@Model.BlogPost.Title</h3>
+
+<div>@Core.Extensions.DynamicContentHelpers.CompiledContent(Model.BlogPost)</div>

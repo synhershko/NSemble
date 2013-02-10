@@ -1,0 +1,19 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<NSemble.Core.Models.ViewTemplate[]>
+
+@{
+  Layout = "_AdminLayout.cshtml";
+}
+
+<h2>List of templates</h2>
+
+@if (Model.Length == 0)
+{
+    <p>No templates found</p>
+
+} else
+{
+    foreach (var template in Model)
+    {
+        <p>@template.Location / @template.Name . @template.Extension</p>
+    }
+}

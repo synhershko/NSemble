@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSemble.Web", "NSemble.Web\NSemble.Web.csproj", "{21C42DBA-A9AD-4E07-BADF-66388185E182}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSemble.Modules.Blog", "NSemble.Modules.Blog\NSemble.Modules.Blog.csproj", "{5FB04194-7532-4D47-8C33-2D56E2C371D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0A82120C-C8A7-4404-BADE-FC8A38F04FC6}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSemble.Core", "NSemble.Core\NSemble.Core.csproj", "{9701E381-599E-4A41-9A01-ED1F347D7ECA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21C42DBA-A9AD-4E07-BADF-66388185E182}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21C42DBA-A9AD-4E07-BADF-66388185E182}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21C42DBA-A9AD-4E07-BADF-66388185E182}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21C42DBA-A9AD-4E07-BADF-66388185E182}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FB04194-7532-4D47-8C33-2D56E2C371D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FB04194-7532-4D47-8C33-2D56E2C371D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FB04194-7532-4D47-8C33-2D56E2C371D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FB04194-7532-4D47-8C33-2D56E2C371D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9701E381-599E-4A41-9A01-ED1F347D7ECA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9701E381-599E-4A41-9A01-ED1F347D7ECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9701E381-599E-4A41-9A01-ED1F347D7ECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9701E381-599E-4A41-9A01-ED1F347D7ECA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

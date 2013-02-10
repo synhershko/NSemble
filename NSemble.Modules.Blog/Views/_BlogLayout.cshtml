@@ -1,0 +1,26 @@
+﻿@using System
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{
+    Layout = "_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="span12">
+        <h2>My blog</h2>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="span8">
+        @RenderBody()
+    </div>
+    <div class="span4">
+        @foreach (var widget in Model.Widgets)
+        {
+            // TODO: Check RegionName
+            // TODO: Move to helper method
+            @Html.Partial(widget.ViewName, widget.Content)
+        }
+    </div>
+</div>

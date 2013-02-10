@@ -1,0 +1,14 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+
+@{
+    Layout = "_BlogLayout.cshtml";
+}
+
+<h3>@Model.ListTitle</h3>
+
+<p>Found @Model.BlogPosts.Count blog posts</p>
+
+@foreach (var post in Model.BlogPosts)
+{
+    <p>@post.Title</p>
+}
