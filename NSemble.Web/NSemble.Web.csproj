@@ -118,6 +118,7 @@
     <Content Include="Views\_AdminLayout.cshtml" />
     <Content Include="Views\Templates\List.cshtml" />
     <Content Include="Views\Templates\Edit.cshtml" />
+    <Content Include="Modules\Welcome\Views\Welcome.cshtml" />
     <None Include="Views\_Layout.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -130,6 +131,7 @@
     <Compile Include="Modules\ContentPages\Admin\ContentPagesAdminModule.cs" />
     <Compile Include="Modules\ContentPages\ContentPagesModule.cs" />
     <Compile Include="Modules\ContentPages\Models\ContentPage.cs" />
+    <Compile Include="Modules\Welcome\WelcomeModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -38,6 +38,12 @@ namespace NSemble.Core.Nancy
                 AreasResolver.Instance.LoadFromStore(session);
             }
 
+			if (!AreasResolver.Instance.HasAreas)
+			{
+				// Setup a default Areas document TODO redirect to a setup screen
+				AreasResolver.Instance.RegisterArea("/", new AreaConfigs {AreaName = "Welcome", ModuleName = "Welcome"});
+			}
+
             Raven.Client.Indexes.IndexCreation.CreateIndexes(typeof(NSembleBootstraper).Assembly, docStore);
 		}
 

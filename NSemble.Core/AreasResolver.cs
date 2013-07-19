@@ -24,6 +24,8 @@ namespace NSemble.Core
         private AreasResolver(){}
         public static readonly AreasResolver Instance = new AreasResolver();
 
+		public bool HasAreas { get { return AreasByRoute.Count > 0; } }
+
         public void RegisterArea(string prefix, AreaConfigs configs)
         {
             if (prefix != null)
@@ -87,14 +89,17 @@ namespace NSemble.Core
 			session.SaveChanges();
 		}
 
-		public void LoadFromStore(IDocumentSession session)
+		public bool LoadFromStore(IDocumentSession session)
 		{
 			var d = session.Load<IDictionary<string, AreaConfigs>>(AreasDocumentName);
+			if (d == null) return false;
+
 			AreasByRoute.Clear();
 			foreach (var areaConfig in d)
 			{
 				RegisterArea(areaConfig.Key, areaConfig.Value);
 			}
+			return true;
 		}
     }
 }
