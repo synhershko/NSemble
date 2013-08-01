@@ -84,6 +84,8 @@
     <Compile Include="Nancy\NSembleResourceReader.cs" />
     <Compile Include="Nancy\NSembleViewLocationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\ExecutableTask.cs" />
+    <Compile Include="Tasks\TaskExecutor.cs" />
     <Compile Include="Widgets\StaticContentWidget.cs" />
   </ItemGroup>
   <ItemGroup>

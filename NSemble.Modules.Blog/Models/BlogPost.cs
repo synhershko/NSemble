@@ -18,6 +18,7 @@ namespace NSemble.Modules.Blog.Models
 		public BlogPost()
 		{
 			ContentType = DynamicContentType.Markdown;
+			CurrentState = State.Draft;
 			PrivateViewingKey = Guid.NewGuid().ToString();
 		}
 
@@ -32,6 +33,11 @@ namespace NSemble.Modules.Blog.Models
 	        get { return DynamicContentHelpers.TitleToSlug(Title ?? string.Empty); }
 	    }
 
+        public bool IsPublic(string key)
+        {
+            return CurrentState == State.Public || (key != null && CurrentState == State.Private && PrivateViewingKey.Equals(key));
+        }
+
 		public string AuthorId { get; set; }
 		public DateTimeOffset PublishedAt { get; set; }
 		public DateTimeOffset? LastEditedAt { get; set; }
@@ -39,6 +45,6 @@ namespace NSemble.Modules.Blog.Models
 		public State CurrentState { get; set; }
 		public bool AllowComments { get; set; }
 		public string PrivateViewingKey { get; set; }
-		// TODO: Comments count
+        public int CommentsCount { get; set; }
 	}
 }

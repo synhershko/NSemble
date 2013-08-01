@@ -35,6 +35,7 @@ namespace NSemble.Modules.Blog.Admin
                 }
 
                 session.Store(post);
+				session.Store(new PostComments(), post.Id + "/comments");
                 session.SaveChanges();
 
                 return Response.AsRedirect(string.Concat(AreaRoutePrefix.TrimEnd('/'), "/", post.Id, "/", post.Slug));

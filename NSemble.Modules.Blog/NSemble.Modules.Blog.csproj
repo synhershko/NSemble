@@ -71,6 +71,7 @@
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\PostComments.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\AddCommentTask.cs" />
     <Compile Include="Widgets\RecentPostsWidget.cs" />
     <Compile Include="WordPressStats.cs" />
   </ItemGroup>

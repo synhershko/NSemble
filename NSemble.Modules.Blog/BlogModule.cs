@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using NSemble.Core.Models;
 using NSemble.Core.Nancy;
+using NSemble.Core.Tasks;
 using NSemble.Modules.Blog.Models;
+using NSemble.Modules.Blog.Tasks;
 using NSemble.Modules.Blog.Widgets;
 using Nancy;
+using Nancy.ModelBinding;
+using Raven.Abstractions.Data;
+using Raven.Abstractions.Exceptions;
 using Raven.Client;
 using Raven.Client.Linq;
 
@@ -27,7 +32,7 @@ namespace NSemble.Modules.Blog
                                          BlogPost post;
                                          try
                                          {
-                                             post = GetBlogPost((int) p.id, session);
+                                             post = GetBlogPost((int)p.id, Request.Query.key as string, session);
                                          }
                                          catch (ArgumentException e)
                                          {
@@ -42,9 +47,8 @@ namespace NSemble.Modules.Blog
                                          if (!post.Slug.Equals(p.slug))
                                              return Response.AsRedirect(string.Concat(AreaRoutePrefix.TrimEnd('/'), "/", post.Id, "/", post.Slug));
 
-                                         // TODO load comments
-
                                          Model.BlogPost = post;
+                                         Model.Comments = session.Load<PostComments>(post.Id + "/comments");
 
                                          return View["ReadBlogPost", Model];
                                      };
@@ -54,7 +58,7 @@ namespace NSemble.Modules.Blog
                                                           BlogPost post;
                                                           try
                                                           {
-                                                              post = GetBlogPost((int)p.id, session);
+                                                              post = GetBlogPost((int)p.id, Request.Query.key as string, session);
                                                           }
                                                           catch (ArgumentException e)
                                                           {
@@ -62,9 +66,13 @@ namespace NSemble.Modules.Blog
                                                           }
 
                                                           if (!post.AllowComments)
-                                                              return "Comments are closed for this post";
+                                                              return 403; // Comments are closed for this post
 
-                                                          // TODO add comment via scripted patching API
+                                                          var commentInput = this.Bind<PostComments.CommentInput>();
+                                                          if (!commentInput.IsValid())
+                                                              return "Error"; // TODO
+
+                                                          TaskExecutor.ExcuteLater(new AddCommentTask(post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress}));
 
                                                           return Response.AsRedirect(string.Concat(AreaRoutePrefix.TrimEnd('/'), "/", post.Id, "/", post.Slug));
                                                       };
@@ -114,23 +122,22 @@ namespace NSemble.Modules.Blog
                                                                                          };
         }
 
-        private BlogPost GetBlogPost(int id, IDocumentSession session)
+        private static BlogPost GetBlogPost(int id, string key, IDocumentSession session)
         {
             var post = session.Load<BlogPost>(id);
             if (post == null)
                 throw new ArgumentException("Requested page could not be found");
 
-            if (post.CurrentState != BlogPost.State.Public)
-            {
-                string key;
-                if ((key = Request.Query.key as string) == null || !(key.Equals(post.PrivateViewingKey)))
-                    throw new ArgumentException("Requested page could not be found");
-            }
+            if (!post.IsPublic(key))
+                throw new ArgumentException("Requested page could not be found");
+
             return post;
         }
 
         protected override void LoadWidgets(IDocumentSession session)
         {
+            session.Load<BlogConfig>("NSemble/Configs/" + "areaName");// TODO: Constants, admin create
+
             // TODO use area config doc to load these
             var widgets = new List<Widget>();
             var widget = new RecentPostsWidget("RecentPosts", "Region");
