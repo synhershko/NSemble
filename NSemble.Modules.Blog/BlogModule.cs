@@ -10,6 +10,7 @@ using NSemble.Modules.Blog.Tasks;
 using NSemble.Modules.Blog.Widgets;
 using Nancy;
 using Nancy.ModelBinding;
+using Nancy.Responses;
 using Raven.Client;
 using Raven.Client.Linq;
 
@@ -44,7 +45,7 @@ namespace NSemble.Modules.Blog
                                              return 404;
 
                                          if (!post.Slug.Equals(p.slug))
-                                             return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
+                                             return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')), RedirectResponse.RedirectType.Permanent);
 
                                          Model.BlogPost = post;
                                          Model.Comments = session.Load<PostComments>(post.Id + "/comments");
