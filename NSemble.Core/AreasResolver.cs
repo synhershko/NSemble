@@ -18,13 +18,18 @@ namespace NSemble.Core
 
     public class RedirectsTable
     {
+        public RedirectsTable()
+        {
+            theTable = new Dictionary<string, RedirectCommand>();
+        }
+
         public class RedirectCommand
         {
             public string NewRoute { get; set; }
             public HttpStatusCode HttpStatusCode { get; set; }
         }
 
-        internal readonly Dictionary<string, RedirectCommand> table = new Dictionary<string, RedirectCommand>();
+        public Dictionary<string, RedirectCommand> theTable { get; private set; }
     }
 
     public sealed class AreasResolver
@@ -99,7 +104,7 @@ namespace NSemble.Core
         public void AddRedirect(string requestPath, RedirectsTable.RedirectCommand redirectCommand)
         {
             redirectsTable = redirectsTable ?? new RedirectsTable();
-            redirectsTable.table.Add(requestPath, redirectCommand);
+            redirectsTable.theTable.Add(requestPath, redirectCommand);
         }
 
         public RedirectsTable.RedirectCommand CheckRedirect(string requestPath)
@@ -107,7 +112,7 @@ namespace NSemble.Core
             if (redirectsTable == null) return null;
 
             RedirectsTable.RedirectCommand ret;
-            redirectsTable.table.TryGetValue(requestPath, out ret);
+            redirectsTable.theTable.TryGetValue(requestPath, out ret);
             return ret;
         }
 
@@ -119,6 +124,8 @@ namespace NSemble.Core
 
 		public bool LoadFromStore(IDocumentSession session)
 		{
+            redirectsTable = session.Load<RedirectsTable>(Constants.RedirectsTableDocumentId);
+
 			var d = session.Load<IDictionary<string, AreaConfigs>>(AreasDocumentName);
 			if (d == null) return false;
 
@@ -127,8 +134,6 @@ namespace NSemble.Core
 			{
 				RegisterArea(areaConfig.Key, areaConfig.Value);
 			}
-
-		    redirectsTable = session.Load<RedirectsTable>(Constants.RedirectsTableDocumentId);
 
 			return true;
 		}
