@@ -31,7 +31,7 @@ namespace NSemble.Modules.Blog.Tasks
 			              	{
 			              		Author = commentInput.Author,
                                 Approved = true,
-			              		Body = commentInput.Body,
+			              		Content = commentInput.Body,
 			              		CreatedAt = DateTimeOffset.UtcNow,
 			              		Email = commentInput.Email,
 			              		Website = commentInput.Website,

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NSemble.Core.Models;
 
 namespace NSemble.Modules.Blog.Models
 {
@@ -82,13 +83,18 @@ namespace NSemble.Modules.Blog.Models
             public string Author { get; set; }
             public string Email { get; set; }
             public string Website { get; set; }
-            public string Body { get; set; }
+            public string Content { get; set; }
             public bool Approved { get; set; }
             public List<Comment> Replies { get; set; }
             public DateTimeOffset CreatedAt { get; set; }
 
             public string UserHostAddress { get; set; }
             public string UserAgent { get; set; }
+        }
+
+        public class Trackback
+        {
+            
         }
     }
 }

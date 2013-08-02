@@ -1,4 +1,5 @@
-﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+﻿@using NSemble.Core.Models
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{
     Layout = "_BlogLayout.cshtml";
 }
@@ -6,3 +7,16 @@
 <h3>@Model.BlogPost.Title</h3>
 
 <div>@NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(Model.BlogPost)</div>
+
+<hr/>
+<div><p><strong>Comments</strong></p>
+    @if (Model.Comments != null)
+    {
+        foreach (var comment in Model.Comments.Comments)
+        {
+            <div>
+                @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(comment.Content, DynamicContentType.Markdown, false)
+            </div>
+        }
+    }        
+</div>

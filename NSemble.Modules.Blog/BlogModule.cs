@@ -131,8 +131,8 @@ namespace NSemble.Modules.Blog
             if (post == null)
                 throw new ArgumentException("Requested page could not be found");
 
-//            if (!post.IsPublic(key))
-//                throw new ArgumentException("Requested page could not be found");
+            if (!post.IsPublic(key))
+                throw new ArgumentException("Requested page could not be found");
 
             return post;
         }
@@ -144,7 +144,7 @@ namespace NSemble.Modules.Blog
             // TODO use area config doc to load these
             var widgets = new List<Widget>();
             var widget = new RecentPostsWidget("RecentPosts", "Region");
-            widget.Content = session.Query<BlogPost>().Where(x => x.CurrentState == BlogPost.State.Public).OrderByDescending(x => x.PublishedAt).Take(5).ToArray();
+            widget.Content = session.Query<BlogPost>().Where(x => x.CurrentState == BlogPost.State.Public).OrderByDescending(x => x.PublishedAt).Take(10).ToArray();
             widgets.Add(widget);
 
             Model.Widgets = widgets;

@@ -80,8 +80,12 @@ namespace NSemble.Core.Extensions
         public static IHtmlString CompiledContent(this IDynamicContent contentItem, bool trustContent = false)
         {
             if (contentItem == null) return NonEncodedHtmlString.Empty;
+            return CompiledStringContent(contentItem.Content, contentItem.ContentType, trustContent);
+        }
 
-            switch (contentItem.ContentType)
+        public static IHtmlString CompiledStringContent(string content, DynamicContentType contentType, bool trustContent = false)
+        {
+            switch (contentType)
             {
                 case DynamicContentType.Markdown:
                     var md = new Markdown
@@ -94,12 +98,11 @@ namespace NSemble.Core.Extensions
                         FormatCodeBlock = null,
                     };
 
-                    var contents = contentItem.Content;
-                    contents = CodeBlockFinder.Replace(contents, match => GenerateCodeBlock(match.Groups[1].Value.Trim(), match.Groups[2].Value));
+                    var contents = CodeBlockFinder.Replace(content, match => GenerateCodeBlock(match.Groups[1].Value.Trim(), match.Groups[2].Value));
                     contents = md.Transform(contents);
                     return new NonEncodedHtmlString(contents);
                 case DynamicContentType.Html:
-                    return trustContent ? new NonEncodedHtmlString(contentItem.Content) : NonEncodedHtmlString.Empty;
+                    return trustContent ? new NonEncodedHtmlString(content) : NonEncodedHtmlString.Empty;
             }
             return NonEncodedHtmlString.Empty;
         }
