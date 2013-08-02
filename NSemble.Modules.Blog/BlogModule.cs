@@ -140,7 +140,7 @@ namespace NSemble.Modules.Blog
             // TODO use area config doc to load these
             var widgets = new List<Widget>();
             var widget = new RecentPostsWidget("RecentPosts", "Region");
-            widget.Content = session.Query<BlogPost>().OrderByDescending(x => x.PublishedAt).Take(5).ToArray();
+            widget.Content = session.Query<BlogPost>().Where(x => x.CurrentState == BlogPost.State.Public).OrderByDescending(x => x.PublishedAt).Take(5).ToArray();
             widgets.Add(widget);
 
             Model.Widgets = widgets;
