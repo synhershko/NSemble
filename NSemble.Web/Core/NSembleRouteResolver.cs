@@ -100,10 +100,10 @@ namespace NSemble.Web.Core
                 return new ResolveResult(new Route(context.Request.Method, context.Request.Path, null, o => o),
                                          DynamicDictionary.Empty,
                                          nancyContext =>
-                                         new RedirectResponse(redirect.NewRoute, RedirectResponse.RedirectType.Permanent),
+                                         new RedirectResponse(redirect.NewRoute, redirect.HttpStatusCode == HttpStatusCode.MovedPermanently ? RedirectResponse.RedirectType.Permanent : RedirectResponse.RedirectType.SeeOther),
                                          null,
                                          (nancyContext, exception) =>
-                                         new RedirectResponse(redirect.NewRoute, RedirectResponse.RedirectType.Permanent));
+                                         new RedirectResponse(redirect.NewRoute, redirect.HttpStatusCode == HttpStatusCode.MovedPermanently ? RedirectResponse.RedirectType.Permanent : RedirectResponse.RedirectType.SeeOther));
             }
 
 			var remainingPath = AreasResolver.Instance.ParseArea(context.Request.Path, out areaConfigs);
