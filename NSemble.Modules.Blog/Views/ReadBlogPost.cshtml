@@ -9,12 +9,16 @@
 <div>@NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(Model.BlogPost)</div>
 
 <hr/>
-<div><p><strong>Comments</strong></p>
+<div>
+    <a name="comments"></a>
+    <p><strong>Comments</strong></p>
     @if (Model.Comments != null)
     {
         foreach (var comment in Model.Comments.Comments)
         {
             <div>
+                @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(comment, 48)
+
                 @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(comment.Content, DynamicContentType.Markdown, false)
             </div>
         }
