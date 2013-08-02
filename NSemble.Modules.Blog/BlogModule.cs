@@ -4,13 +4,12 @@ using System.Linq;
 using NSemble.Core.Models;
 using NSemble.Core.Nancy;
 using NSemble.Core.Tasks;
+using NSemble.Modules.Blog.Helpers;
 using NSemble.Modules.Blog.Models;
 using NSemble.Modules.Blog.Tasks;
 using NSemble.Modules.Blog.Widgets;
 using Nancy;
 using Nancy.ModelBinding;
-using Raven.Abstractions.Data;
-using Raven.Abstractions.Exceptions;
 using Raven.Client;
 using Raven.Client.Linq;
 
@@ -23,7 +22,7 @@ namespace NSemble.Modules.Blog
         {
             // TODO blog module configs by area name
 
-            const string blogPostRoute = @"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/(?<id>\d+)-{slug}";
+            const string blogPostRoute = @"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/{id}-{slug}";
 
             LoadWidgets(session);
 
@@ -32,7 +31,7 @@ namespace NSemble.Modules.Blog
                                          BlogPost post;
                                          try
                                          {
-                                             post = GetBlogPost((int)p.id, Request.Query.key as string, session);
+                                             post = GetBlogPost((int)p.id, Request.Query.key, session);
                                          }
                                          catch (ArgumentException e)
                                          {
@@ -45,7 +44,7 @@ namespace NSemble.Modules.Blog
                                              return 404;
 
                                          if (!post.Slug.Equals(p.slug))
-                                             return Response.AsRedirect(string.Concat(AreaRoutePrefix.TrimEnd('/'), "/", post.Id, "/", post.Slug));
+                                             return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
 
                                          Model.BlogPost = post;
                                          Model.Comments = session.Load<PostComments>(post.Id + "/comments");
@@ -58,7 +57,7 @@ namespace NSemble.Modules.Blog
                                                           BlogPost post;
                                                           try
                                                           {
-                                                              post = GetBlogPost((int)p.id, Request.Query.key as string, session);
+                                                              post = GetBlogPost((int)p.id, Request.Query.key, session);
                                                           }
                                                           catch (ArgumentException e)
                                                           {
@@ -74,7 +73,7 @@ namespace NSemble.Modules.Blog
 
                                                           TaskExecutor.ExcuteLater(new AddCommentTask(post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress}));
 
-                                                          return Response.AsRedirect(string.Concat(AreaRoutePrefix.TrimEnd('/'), "/", post.Id, "/", post.Slug));
+                                                          return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
                                                       };
 
             Get["/"] = o =>
@@ -128,8 +127,8 @@ namespace NSemble.Modules.Blog
             if (post == null)
                 throw new ArgumentException("Requested page could not be found");
 
-            if (!post.IsPublic(key))
-                throw new ArgumentException("Requested page could not be found");
+//            if (!post.IsPublic(key))
+//                throw new ArgumentException("Requested page could not be found");
 
             return post;
         }
