@@ -1,14 +1,20 @@
-﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
-
+﻿@using System
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{
     Layout = "_BlogLayout.cshtml";
 }
 
 <h3>@Model.ListTitle</h3>
 
-<p>Found @Model.BlogPosts.Count blog posts</p>
-
 @foreach (var post in Model.BlogPosts)
 {
-    <p>@post.Title</p>
+    <h3><a href="@post.Slug">@post.Title</a></h3>
+    
+    <div>
+        @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
+    </div>
+    <div style="background-color: #ccc">Published: @post.PublishedAt under the tags @String.Join(", ", post.Tags) | Comments (@post.CommentsCount)</div>
+    <hr/>
 }
+
+<p>Showing 15 posts out of @Model.BlogPosts.Count total</p>

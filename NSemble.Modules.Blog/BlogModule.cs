@@ -82,6 +82,7 @@ namespace NSemble.Modules.Blog
                                var posts = session.Query<BlogPost>()
                                                        .Where(x => x.CurrentState == BlogPost.State.Public)
                                                        .OrderByDescending(x => x.PublishedAt)
+                                                       .Take(15)
                                                        .ToList();
 
                                Model.BlogPosts = posts;
@@ -97,6 +98,7 @@ namespace NSemble.Modules.Blog
                                                                          .Where(x => x.PublishedAt.Year == year)
                                                                          .Where(x => x.CurrentState == BlogPost.State.Public)
                                                                          .OrderByDescending(x => x.PublishedAt)
+                                                                         .Take(15)
                                                                          .ToList();
 
                                                                      Model.BlogPosts = posts;
@@ -113,6 +115,7 @@ namespace NSemble.Modules.Blog
                                                                                                  .Where(x => x.PublishedAt.Year == year && x.PublishedAt.Month == month)
                                                                                                  .Where(x => x.CurrentState == BlogPost.State.Public)
                                                                                                  .OrderByDescending(x => x.PublishedAt)
+                                                                                                 .Take(15)
                                                                                                  .ToList();
 
                                                                                              Model.BlogPosts = posts;
