@@ -123,6 +123,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Admin\RedirectsModule.cs" />
     <Compile Include="Core\Admin\TemplatesModule.cs" />
     <Compile Include="Core\NSembleCoreAdminModule.cs" />
     <Compile Include="Core\NSembleBootstraper.cs" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\ContentPages\Indexes\" />
+    <Folder Include="Views\Redirects\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Modules\ContentPages\Views\Read.cshtml" />

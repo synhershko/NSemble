@@ -1,4 +1,5 @@
 ﻿using NSemble.Core;
+using Nancy.Responses;
 using Nancy.TinyIoc;
 using Raven.Client;
 using DynamicDictionary = Nancy.DynamicDictionary;
@@ -88,6 +89,22 @@ namespace NSemble.Web.Core
 				var ret = Resolve(string.Concat(Constants.ResolverAdminAreaPrefix, "/", areaConfigs.ModuleName, path), context, this.cache);
 				return ret.Selected;
 			}
+
+            // Try resolving a redirect; this can be done only on the full URLs
+            var redirect = AreasResolver.Instance.CheckRedirect(context.Request.Path);
+            if (redirect != null)
+            {
+                if (redirect.HttpStatusCode == HttpStatusCode.NotFound)
+                    return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Path), DynamicDictionary.Empty, null, null, null);
+
+                return new ResolveResult(new Route(context.Request.Method, context.Request.Path, null, o => o),
+                                         DynamicDictionary.Empty,
+                                         nancyContext =>
+                                         new RedirectResponse(redirect.NewRoute, RedirectResponse.RedirectType.Permanent),
+                                         null,
+                                         (nancyContext, exception) =>
+                                         new RedirectResponse(redirect.NewRoute, RedirectResponse.RedirectType.Permanent));
+            }
 
 			var remainingPath = AreasResolver.Instance.ParseArea(context.Request.Path, out areaConfigs);
 			if (areaConfigs == null)

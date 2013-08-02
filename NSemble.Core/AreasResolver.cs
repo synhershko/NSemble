@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Nancy;
 using Raven.Client;
 
 namespace NSemble.Core
@@ -15,11 +16,23 @@ namespace NSemble.Core
         public string TenantName { get; set; }
     }
 
+    public class RedirectsTable
+    {
+        public class RedirectCommand
+        {
+            public string NewRoute { get; set; }
+            public HttpStatusCode HttpStatusCode { get; set; }
+        }
+
+        internal readonly Dictionary<string, RedirectCommand> table = new Dictionary<string, RedirectCommand>();
+    }
+
     public sealed class AreasResolver
     {
 	    private const string AreasDocumentName = "NSemble/Areas";
         private readonly ConcurrentDictionary<string, AreaConfigs> AreasByRoute = new ConcurrentDictionary<string, AreaConfigs>();
         private readonly ConcurrentDictionary<string, AreaConfigs> AreasByName = new ConcurrentDictionary<string, AreaConfigs>();
+        private RedirectsTable redirectsTable;
 
         private AreasResolver(){}
         public static readonly AreasResolver Instance = new AreasResolver();
@@ -80,8 +93,23 @@ namespace NSemble.Core
                 throw new ArgumentException("Area name cannot be empty", "areaName");
 
 			AreaConfigs val;
-			return (AreasByName.TryGetValue(areaName.ToLowerInvariant(), out val)) ? val : null;
-		}
+			return (AreasByName.TryGetValue(areaName.ToLowerInvariant(), out val)) ? val : null;	        
+        }
+
+        public void AddRedirect(string requestPath, RedirectsTable.RedirectCommand redirectCommand)
+        {
+            redirectsTable = redirectsTable ?? new RedirectsTable();
+            redirectsTable.table.Add(requestPath, redirectCommand);
+        }
+
+        public RedirectsTable.RedirectCommand CheckRedirect(string requestPath)
+        {
+            if (redirectsTable == null) return null;
+
+            RedirectsTable.RedirectCommand ret;
+            redirectsTable.table.TryGetValue(requestPath, out ret);
+            return ret;
+        }
 
 		public void PersistToStore(IDocumentSession session)
 		{
@@ -99,6 +127,9 @@ namespace NSemble.Core
 			{
 				RegisterArea(areaConfig.Key, areaConfig.Value);
 			}
+
+		    redirectsTable = session.Load<RedirectsTable>(Constants.RedirectsTableDocumentId);
+
 			return true;
 		}
     }
