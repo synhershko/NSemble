@@ -22,7 +22,7 @@ namespace NSemble.Modules.Blog
         {
             // TODO blog module configs by area name
 
-            const string blogPostRoute = @"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/{id}-{slug}";
+            const string blogPostRoute = @"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/(?<id>\d+)-(?<slug>.+)";
 
             LoadWidgets(session);
 
