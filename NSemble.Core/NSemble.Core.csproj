@@ -71,6 +71,8 @@
   <ItemGroup>
     <Compile Include="AreasResolver.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Extensions\RavenHelpers.cs" />
+    <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Models\DynamicContent.cs" />
     <Compile Include="Extensions\DynamicContentHelpers.cs" />
     <Compile Include="Models\ErrorModel.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -12,6 +13,23 @@ namespace NSemble.Core.Extensions
 {
     public static class HtmlExtensions
     {
+        public static IHtmlString Html5DateTag(this DateTimeOffset timestamp)
+        {
+            return new NonEncodedHtmlString(string.Format(@"<time datetime=""{0}"">{1}</time>", timestamp.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture), timestamp.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture)));
+        }
+
+        public static IHtmlString Html5DateTimeTag(this DateTimeOffset timestamp)
+        {
+            return new NonEncodedHtmlString(string.Format(@"<time datetime=""{0}"">{1}</time>", timestamp.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture), timestamp.ToString("dddd, dd MMMM yyyy, HH:mm", CultureInfo.InvariantCulture)));
+        }
+
+        public static IHtmlString Html5MinutesAgoTag(this DateTimeOffset timestamp)
+        {
+            return new NonEncodedHtmlString(string.Format(@"<time datetime=""{0}"">{1}</time>", timestamp.ToString("yyyy-MM-ddTHH:mm", CultureInfo.InvariantCulture),
+                DateTimeOffset.Now.Subtract(timestamp).ToReadableString()
+                ));
+        }
+
         public static MemberInfo GetTargetMemberInfo(this Expression expression)
         {
             switch (expression.NodeType)

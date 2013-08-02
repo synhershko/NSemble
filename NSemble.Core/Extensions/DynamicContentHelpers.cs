@@ -1,8 +1,11 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using MarkdownDeep;
 using NSemble.Core.Models;
+using Nancy.Helpers;
 using Nancy.ViewEngines.Razor;
 
 namespace NSemble.Core.Extensions
@@ -71,6 +74,9 @@ namespace NSemble.Core.Extensions
             return title;
         }
 
+        static readonly Regex CodeBlockFinder = new Regex(@"\[code lang=(.+?)\s*\](.*?)\[/code\]", RegexOptions.Compiled | RegexOptions.Singleline);
+        static readonly Regex FirstLineSpacesFinder = new Regex(@"^(\s|\t)+", RegexOptions.Compiled);
+
         public static IHtmlString CompiledContent(this IDynamicContent contentItem, bool trustContent = false)
         {
             if (contentItem == null) return NonEncodedHtmlString.Empty;
@@ -85,10 +91,11 @@ namespace NSemble.Core.Extensions
                         NoFollowLinks = !trustContent,
                         SafeMode = false,
                         NewWindowForExternalLinks = true,
+                        FormatCodeBlock = null,
                     };
 
                     var contents = contentItem.Content;
-                    // TODO contents = CodeBlockFinder.Replace(contents, match => GenerateCodeBlock(match.Groups[1].Value.Trim(), match.Groups[2].Value));
+                    contents = CodeBlockFinder.Replace(contents, match => GenerateCodeBlock(match.Groups[1].Value.Trim(), match.Groups[2].Value));
                     contents = md.Transform(contents);
                     return new NonEncodedHtmlString(contents);
                 case DynamicContentType.Html:
@@ -96,5 +103,37 @@ namespace NSemble.Core.Extensions
             }
             return NonEncodedHtmlString.Empty;
         }
+
+        private static string GenerateCodeBlock(string lang, string code)
+        {
+            code = HttpUtility.HtmlDecode(code);
+            return string.Format("{0}{1}{0}", Environment.NewLine,
+                                 ConvertMarkdownCodeStatment(code)//.Replace("<", "&lt;"), // to support syntax highlighting on pre tags
+                                 , lang
+                );
+        }
+
+        private static string ConvertMarkdownCodeStatment(string code)
+        {
+            var line = code.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            var firstLineSpaces = GetFirstLineSpaces(line.FirstOrDefault());
+            var firstLineSpacesLength = firstLineSpaces.Length;
+            var formattedLines = line.Select(l => string.Format("    {0}", l.Substring(l.Length < firstLineSpacesLength ? 0 : firstLineSpacesLength)));
+            return string.Join(Environment.NewLine, formattedLines);
+        }
+
+        private static string GetFirstLineSpaces(string firstLine)
+        {
+            if (firstLine == null)
+                return string.Empty;
+
+            var match = FirstLineSpacesFinder.Match(firstLine);
+            if (match.Success)
+            {
+                return firstLine.Substring(0, match.Length);
+            }
+            return string.Empty;
+        }
+
     }
 }
