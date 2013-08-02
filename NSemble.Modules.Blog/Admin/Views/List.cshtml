@@ -1,0 +1,22 @@
+﻿@using NSemble.Modules.Blog.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<NSemble.Modules.Blog.Models.BlogPost[]>
+              
+@{
+  Layout = "_AdminLayout.cshtml";
+}
+
+<h1>List of blog entries</h1>
+
+<a href="post-new">Add a new post</a>
+
+@if (Model.Length == 0)
+{
+    <p>No entries to display</p>
+
+} else
+{
+    foreach (var post in Model)
+    {
+        <div><a href="@post.ToUrl((string)ViewBag.ModulePrefix)">@post.Title</a> (@post.CurrentState, published @post.PublishedAt)</div>
+    }
+}

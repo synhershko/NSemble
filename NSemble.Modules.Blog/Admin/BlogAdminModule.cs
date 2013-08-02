@@ -1,4 +1,7 @@
-﻿using NSemble.Core.Models;
+﻿using System;
+using System.Linq;
+using NSemble.Core.Models;
+using NSemble.Modules.Blog.Helpers;
 using NSemble.Modules.Blog.Models;
 using Nancy;
 using Nancy.ModelBinding;
@@ -13,7 +16,8 @@ namespace NSemble.Modules.Blog.Admin
 		{
 		    Get["/"] = o =>
 		                   {
-		                       return "Blog admin";
+		                       ViewBag.ModulePrefix = AreaRoutePrefix.TrimEnd('/');
+		                       return View["List", session.Query<BlogPost>().ToArray()];
 		                   };
 
 		    Get["/post-new/"] = p => View["Edit", new BlogPost
@@ -34,11 +38,22 @@ namespace NSemble.Modules.Blog.Admin
                     return View["Edit", post];
                 }
 
+                // Set some defaults
+                post.PublishedAt = DateTimeOffset.UtcNow;
+                post.AllowComments = true;
+                post.AuthorId = "users/itamar";
+
+                string tags = Request.Form.TagsAsString;
+                if (!String.IsNullOrWhiteSpace(tags))
+                {
+                    post.Tags = tags.Split(new[] {' ', ','}, StringSplitOptions.RemoveEmptyEntries);
+                }
+
                 session.Store(post);
 				session.Store(new PostComments(), post.Id + "/comments");
                 session.SaveChanges();
 
-                return Response.AsRedirect(string.Concat(AreaRoutePrefix.TrimEnd('/'), "/", post.Id, "/", post.Slug));
+                return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
             };
 		}
 	}

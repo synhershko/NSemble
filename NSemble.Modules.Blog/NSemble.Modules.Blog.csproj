@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Admin\BlogAdminModule.cs" />
     <Compile Include="BlogModule.cs" />
+    <Compile Include="Helpers\BlogPostHelpers.cs" />
     <Compile Include="Models\BlogConfig.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\PostComments.cs" />
@@ -75,10 +76,10 @@
     <Compile Include="Widgets\RecentPostsWidget.cs" />
     <Compile Include="WordPressStats.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Admin\Views\" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="Admin\Views\List.cshtml" />
+    <EmbeddedResource Include="Admin\Views\Edit.cshtml" />
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Views\ReadBlogPost.cshtml" />
