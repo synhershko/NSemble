@@ -34,7 +34,6 @@ namespace NSemble.Core
 
     public sealed class AreasResolver
     {
-	    private const string AreasDocumentName = "NSemble/Areas";
         private readonly ConcurrentDictionary<string, AreaConfigs> AreasByRoute = new ConcurrentDictionary<string, AreaConfigs>();
         private readonly ConcurrentDictionary<string, AreaConfigs> AreasByName = new ConcurrentDictionary<string, AreaConfigs>();
         private RedirectsTable redirectsTable;
@@ -118,7 +117,7 @@ namespace NSemble.Core
 
 		public void PersistToStore(IDocumentSession session)
 		{
-			session.Store(AreasByRoute, AreasDocumentName);
+			session.Store(AreasByRoute, Constants.AreasDocumentName);
 			session.SaveChanges();
 		}
 
@@ -126,7 +125,7 @@ namespace NSemble.Core
 		{
             redirectsTable = session.Load<RedirectsTable>(Constants.RedirectsTableDocumentId);
 
-			var d = session.Load<IDictionary<string, AreaConfigs>>(AreasDocumentName);
+			var d = session.Load<IDictionary<string, AreaConfigs>>(Constants.AreasDocumentName);
 			if (d == null) return false;
 
 			AreasByRoute.Clear();

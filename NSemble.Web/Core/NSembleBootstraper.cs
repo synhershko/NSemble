@@ -32,7 +32,6 @@ namespace NSemble.Core.Nancy
             var docStore = container.Resolve<IDocumentStore>("DocStore");
 
             AreasResolver.Instance.AdminAreaPrefix = "/admin";
-
             using (var session = docStore.OpenSession())
             {
                 AreasResolver.Instance.LoadFromStore(session);
