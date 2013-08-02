@@ -150,7 +150,7 @@ namespace NSemble.Web.Core
 			// If two candidates have the same number of path segments the tie breaker is the parameter count.
 			var selectedRoutes = routes.Item1
 				.OrderBy(x => x.Item4.Parameters.GetDynamicMemberNames().Count())
-				.OrderByDescending(x => x.Item3.Path.Count(c => c.Equals('/')));
+				.ThenByDescending(x => x.Item3.Path.Count(c => c.Equals('/')));
 
 			foreach (var tuple in selectedRoutes)
 			{
