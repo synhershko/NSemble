@@ -101,11 +101,16 @@ namespace NSemble.Core.Nancy
             // NancyContext to get the apiKey. Then, use the apiKey to get 
             // your user's identity.
             var configuration =
-                new StatelessAuthenticationConfiguration(nancyContext =>
+                new StatelessAuthenticationConfiguration(c =>
                 {
                     //for now, we will pull the apiKey from the querystring, 
                     //but you can pull it from any part of the NancyContext
-                    var apiKey = (string)nancyContext.Request.Query.ApiKey.Value;
+                    var apiKey = (string) c.Request.Query.ApiKey.Value ?? c.Request.Form.ApiKey.Value;
+
+                    if (apiKey == null && c.Request.Cookies.ContainsKey("ApiKey"))
+                        apiKey = c.Request.Cookies["ApiKey"];
+
+                    context.Items.Add("ApiKey", apiKey);
 
                     //get the user identity however you choose to (for now, using a static class/method)
                     return NSembleUserAuthentication.GetUserFromApiKey(container.Resolve<IDocumentSession>(), apiKey);
