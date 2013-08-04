@@ -17,6 +17,6 @@
 {
     foreach (var post in Model)
     {
-        <div><a href="@post.ToUrl((string)ViewBag.ModulePrefix)">@post.Title</a> (@post.CurrentState, published @post.PublishedAt)</div>
+        <div><a href="@post.ToUrl((string)ViewBag.ModulePrefix)">@post.Title</a> (@post.CurrentState, published @post.PublishedAt) <a href="#">Edit</a> | <a href="#">Delete</a></div>
     }
 }
