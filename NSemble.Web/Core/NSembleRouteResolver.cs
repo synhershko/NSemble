@@ -54,16 +54,24 @@
             {
                 String areaName;
                 var path = pathDecoded.Substring(AreasResolver.Instance.AdminAreaPrefix.Length);
-                int pos = path.IndexOf('/', 1);
-                if (pos > 1)
+                if (path.Length == 0)
                 {
-                    areaName = path.Substring(1, pos - 1);
-                    path = path.Substring(pos);
+                    areaName = "home";
+                    path = "/";
                 }
                 else
                 {
-                    areaName = path.Substring(1);
-                    path = "/";
+                    int pos = path.IndexOf('/', 1);
+                    if (pos > 1)
+                    {
+                        areaName = path.Substring(1, pos - 1);
+                        path = path.Substring(pos);
+                    }
+                    else
+                    {
+                        areaName = path.Substring(1);
+                        path = "/";
+                    }
                 }
 
                 // Core admin modules take precedence over user modules
