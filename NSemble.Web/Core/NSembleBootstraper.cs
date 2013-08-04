@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Web;
 using NSemble.Web.Core;
 using Nancy;
@@ -72,6 +74,8 @@ namespace NSemble.Core.Nancy
                 return ret;
             };
 
+            AppDomainAssemblyTypeScanner.LoadAssembliesWithNancyReferences();
+
             docStore.Initialize();
             container.Register<IDocumentStore>(docStore, "DocStore");
 
@@ -91,9 +95,12 @@ namespace NSemble.Core.Nancy
         {
             get
             {
-				return NancyInternalConfiguration
-					.WithOverrides(x => { x.ViewLocationProvider = typeof (NSembleViewLocationProvider); x.RouteResolver = typeof(NSembleRouteResolver); })
-                    .WithIgnoredAssembly(asm => asm.FullName.StartsWith("RavenDB", StringComparison.InvariantCulture)); // or override ConfigureApplicationContainer to set AutoRegister to false
+                return NancyInternalConfiguration
+                    .WithOverrides(x =>
+                                       {
+                                           x.ViewLocationProvider = typeof (NSembleViewLocationProvider);
+                                           x.RouteResolver = typeof (NSembleRouteResolver);
+                                       });
             }
         }
     }
