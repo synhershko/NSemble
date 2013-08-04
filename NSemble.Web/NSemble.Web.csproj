@@ -99,6 +99,18 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\login\css\base.css" />
+    <Content Include="Content\login\css\layout.css" />
+    <Content Include="Content\login\css\skeleton.css" />
+    <Content Include="Content\login\images\bg.jpg" />
+    <Content Include="Content\login\images\bg2.jpg" />
+    <Content Include="Content\login\images\bg_form.jpg" />
+    <Content Include="Content\login\images\close-hover.png" />
+    <Content Include="Content\login\images\close.png" />
+    <Content Include="Content\login\images\form-bg.png" />
+    <Content Include="Content\login\images\login.png" />
+    <Content Include="Content\login\images\login_active.png" />
+    <Content Include="Content\login\images\login_hover.png" />
     <Content Include="Content\Scripts\bootstrap.js" />
     <Content Include="Content\Scripts\bootstrap.min.js" />
     <Content Include="Content\Scripts\MarkdownDeep License.txt" />
@@ -117,6 +129,7 @@
     <Content Include="Views\Templates\List.cshtml" />
     <Content Include="Views\Templates\Edit.cshtml" />
     <Content Include="Modules\Welcome\Views\Welcome.cshtml" />
+    <Content Include="Modules\Membership\Views\Login.cshtml" />
     <None Include="Views\_Layout.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -130,6 +143,8 @@
     <Compile Include="Modules\ContentPages\Admin\ContentPagesAdminModule.cs" />
     <Compile Include="Modules\ContentPages\ContentPagesModule.cs" />
     <Compile Include="Modules\ContentPages\Models\ContentPage.cs" />
+    <Compile Include="Modules\Membership\MembershipModule.cs" />
+    <Compile Include="Modules\Membership\Models\LoginInput.cs" />
     <Compile Include="Modules\Welcome\WelcomeModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

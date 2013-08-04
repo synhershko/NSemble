@@ -43,6 +43,12 @@ namespace NSemble.Core.Nancy
             if (!CompareByteArrays(hashedPassword, userRecord.Password))
                 return null;
 
+            // clear previous tokens
+            foreach (var token in ravenSession.Query<ApiKeyToken>().Where(x => x.UserId == userRecord.Id))
+            {
+                ravenSession.Delete(token);
+            }
+
             // now that the user is validated, create an api key that can be used for subsequent requests
             var apiKey = Guid.NewGuid().ToString();
             ravenSession.Store(new ApiKeyToken { UserId = userRecord.Id, SessionStarted = DateTimeOffset.UtcNow }, GetApiKeyDocumentId(apiKey));
