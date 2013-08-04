@@ -41,7 +41,9 @@ namespace NSemble.Modules.Blog.Admin
                 // Set some defaults
                 post.PublishedAt = DateTimeOffset.UtcNow;
                 post.AllowComments = true;
-                post.AuthorId = "users/itamar";
+                
+                var identity = (User)Context.CurrentUser;
+                post.AuthorId = identity.Id;
 
                 string tags = Request.Form.TagsAsString;
                 if (!String.IsNullOrWhiteSpace(tags))

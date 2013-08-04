@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Web;
 using NSemble.Web.Core;
 using Nancy;
+using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
 using Raven.Client;
 using Raven.Client.Document;
@@ -89,6 +90,28 @@ namespace NSemble.Core.Nancy
             var docStore = container.Resolve<IDocumentStore>("DocStore");
             var session = docStore.OpenSession();
             container.Register<IDocumentSession>(session);
+        }
+
+        protected override void RequestStartup(global::Nancy.TinyIoc.TinyIoCContainer container, IPipelines pipelines, NancyContext context)
+        {
+            // At request startup we modify the request pipelines to
+            // include stateless authentication
+            //
+            // Configuring stateless authentication is simple. Just use the 
+            // NancyContext to get the apiKey. Then, use the apiKey to get 
+            // your user's identity.
+            var configuration =
+                new StatelessAuthenticationConfiguration(nancyContext =>
+                {
+                    //for now, we will pull the apiKey from the querystring, 
+                    //but you can pull it from any part of the NancyContext
+                    var apiKey = (string)nancyContext.Request.Query.ApiKey.Value;
+
+                    //get the user identity however you choose to (for now, using a static class/method)
+                    return NSembleUserAuthentication.GetUserFromApiKey(container.Resolve<IDocumentSession>(), apiKey);
+                });
+
+            StatelessAuthentication.Enable(pipelines, configuration);
         }
 
         protected override NancyInternalConfiguration InternalConfiguration

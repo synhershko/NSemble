@@ -78,12 +78,14 @@
     <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Models\PageModel.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\ViewTemplate.cs" />
     <Compile Include="Models\Widget.cs" />
     <Compile Include="Nancy\NSembleAdminModule.cs" />
     <Compile Include="Nancy\NSembleModule.cs" />
     <Compile Include="Nancy\NSembleResourceAssemblyProvider.cs" />
     <Compile Include="Nancy\NSembleResourceReader.cs" />
+    <Compile Include="Nancy\NSembleUserAuthentication.cs" />
     <Compile Include="Nancy\NSembleViewLocationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\ExecutableTask.cs" />
