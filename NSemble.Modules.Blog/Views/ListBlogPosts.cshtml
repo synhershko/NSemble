@@ -8,7 +8,7 @@
 
 @foreach (var post in Model.BlogPosts)
 {
-    <h3><a href="@post.Slug">@post.Title</a></h3>
+    <h3><a href="@NSemble.Modules.Blog.Helpers.BlogPostHelpers.ToUrl(post, (string) Model.AreaPrefix)">@post.Title</a></h3>
     
     <div>
         @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)

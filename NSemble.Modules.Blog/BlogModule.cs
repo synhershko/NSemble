@@ -47,6 +47,7 @@ namespace NSemble.Modules.Blog
                                          if (!post.Slug.Equals(p.slug))
                                              return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')), RedirectResponse.RedirectType.Permanent);
 
+                                         Model.AreaPrefix = AreaRoutePrefix;
                                          Model.BlogPost = post;
                                          Model.Comments = session.Load<PostComments>(post.Id + "/comments");
 
@@ -74,6 +75,8 @@ namespace NSemble.Modules.Blog
 
                                                           TaskExecutor.ExcuteLater(new AddCommentTask(post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress}));
 
+                                                          Model.AreaPrefix = AreaRoutePrefix;
+
                                                           return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
                                                       };
 
@@ -85,6 +88,7 @@ namespace NSemble.Modules.Blog
                                                        .Take(15)
                                                        .ToList();
 
+                               Model.AreaPrefix = AreaRoutePrefix;
                                Model.BlogPosts = posts;
                                Model.ListTitle = string.Empty;
 
@@ -101,6 +105,7 @@ namespace NSemble.Modules.Blog
                                                                          .Take(15)
                                                                          .ToList();
 
+                                                                     Model.AreaPrefix = AreaRoutePrefix;
                                                                      Model.BlogPosts = posts;
                                                                      Model.ListTitle = String.Format("All blog posts of the year {0}", p.year);
 
@@ -118,6 +123,7 @@ namespace NSemble.Modules.Blog
                                                                                                  .Take(15)
                                                                                                  .ToList();
 
+                                                                                             Model.AreaPrefix = AreaRoutePrefix;
                                                                                              Model.BlogPosts = posts;
                                                                                              Model.ListTitle = String.Format("All blog posts of month {0} of the year {1}", p.month, p.year);
 
