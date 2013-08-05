@@ -36,6 +36,7 @@ namespace NSemble.Modules.ContentPages.Admin
                                        }
 
                                        session.Store(cp, pageId);
+                                       session.SaveChanges();
 
                                        return Response.AsRedirect(string.Concat(AreaRoutePrefix.TrimEnd('/'), "/", cp.Slug));
                                    };
