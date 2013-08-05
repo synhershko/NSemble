@@ -1,9 +1,10 @@
-﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+﻿@using Nancy.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>@Model.Page.PrefixTitle @Model.Page.Title</title>
+    <title>@Model.Page.PrefixTitle @HttpUtility.HtmlEncode(Model.Page.Title)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--[if lt IE 9]>

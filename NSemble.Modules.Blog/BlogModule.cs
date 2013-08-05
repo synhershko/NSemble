@@ -47,6 +47,7 @@ namespace NSemble.Modules.Blog
                                          if (!post.Slug.Equals(p.slug))
                                              return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')), RedirectResponse.RedirectType.Permanent);
 
+                                         ((PageModel)Model.Page).Title = post.Title;
                                          Model.AreaPrefix = AreaRoutePrefix;
                                          Model.BlogPost = post;
                                          Model.Comments = session.Load<PostComments>(post.Id + "/comments");
@@ -88,6 +89,7 @@ namespace NSemble.Modules.Blog
                                                        .Take(15)
                                                        .ToList();
 
+                               ((PageModel)Model.Page).Title = "Blog roll";
                                Model.AreaPrefix = AreaRoutePrefix;
                                Model.BlogPosts = posts;
                                Model.ListTitle = string.Empty;
@@ -107,7 +109,7 @@ namespace NSemble.Modules.Blog
 
                                                                      Model.AreaPrefix = AreaRoutePrefix;
                                                                      Model.BlogPosts = posts;
-                                                                     Model.ListTitle = String.Format("All blog posts of the year {0}", p.year);
+                                                                     ((PageModel)Model.Page).Title = Model.ListTitle = String.Format("All blog posts of the year {0}", p.year);
 
                                                                      return View["ListBlogPosts", Model];
                                                                  };
@@ -125,7 +127,7 @@ namespace NSemble.Modules.Blog
 
                                                                                              Model.AreaPrefix = AreaRoutePrefix;
                                                                                              Model.BlogPosts = posts;
-                                                                                             Model.ListTitle = String.Format("All blog posts of month {0} of the year {1}", p.month, p.year);
+                                                                                             ((PageModel)Model.Page).Title = Model.ListTitle = String.Format("All blog posts of month {0} of the year {1}", p.month, p.year);
 
                                                                                              return View["ListBlogPosts", Model];
                                                                                          };
