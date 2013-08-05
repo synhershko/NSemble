@@ -46,6 +46,8 @@ namespace NSemble.Core.Nancy
 				AreasResolver.Instance.RegisterArea("/", new AreaConfigs {AreaName = "Welcome", ModuleName = "Welcome"});
 			}
 
+		    StaticConfiguration.Caching.EnableRuntimeViewUpdates = true;
+
             Raven.Client.Indexes.IndexCreation.CreateIndexes(typeof(NSembleBootstraper).Assembly, docStore);
 		}
 
