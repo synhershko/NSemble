@@ -130,7 +130,7 @@
     <Content Include="Views\Templates\Edit.cshtml" />
     <Content Include="Modules\Welcome\Views\Welcome.cshtml" />
     <Content Include="Modules\Membership\Views\Login.cshtml" />
-    <None Include="Views\_Layout.cshtml" />
+    <Content Include="Views\_Layout.cshtml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -163,7 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\ContentPages\Indexes\" />
-    <Folder Include="Views\Redirects\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Modules\ContentPages\Views\Read.cshtml" />
@@ -180,7 +179,7 @@
       <Name>NSemble.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\NSemble.Modules.Blog\NSemble.Modules.Blog.csproj">
-      <Project>{5FB04194-7532-4D47-8C33-2D56E2C371D5}</Project>
+      <Project>{5fb04194-7532-4d47-8c33-2d56e2c371d5}</Project>
       <Name>NSemble.Modules.Blog</Name>
     </ProjectReference>
   </ItemGroup>
