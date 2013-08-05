@@ -103,7 +103,7 @@ namespace NSemble.Core
         public void AddRedirect(string requestPath, RedirectsTable.RedirectCommand redirectCommand)
         {
             redirectsTable = redirectsTable ?? new RedirectsTable();
-            redirectsTable.theTable.Add(requestPath, redirectCommand);
+            redirectsTable.theTable.Add(requestPath.TrimEnd(new[] {'/', ' '}), redirectCommand);
         }
 
         public RedirectsTable.RedirectCommand CheckRedirect(string requestPath)
@@ -111,7 +111,7 @@ namespace NSemble.Core
             if (redirectsTable == null) return null;
 
             RedirectsTable.RedirectCommand ret;
-            redirectsTable.theTable.TryGetValue(requestPath, out ret);
+            redirectsTable.theTable.TryGetValue(requestPath.TrimEnd(new[] {'/', ' '}), out ret);
             return ret;
         }
 
