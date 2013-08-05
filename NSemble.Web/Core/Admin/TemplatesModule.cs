@@ -25,7 +25,7 @@ namespace NSemble.Web.Core.Admin
             Get[@"/edit/(?<viewName>\S+)/"] = p =>
                                                   {
                                                       var viewName = (string) p.viewName;
-                                                var template = session.Load<ViewTemplate>(viewName);
+                                                var template = session.Load<ViewTemplate>(Constants.RavenViewDocumentPrefix + viewName);
                                                 
                                                 // Even if we don't have it stored in the DB, it might still exist as a resource. Try loading it from Nancy.
                                                 if (template == null)
@@ -45,6 +45,17 @@ namespace NSemble.Web.Core.Admin
 
                                                 return View["Edit", template];
                                             };
+
+            Post[@"/edit/(?<viewName>\S+)/"] = p =>
+                                                   {
+                                                       var template = this.Bind<ViewTemplate>();
+                                                       var viewName = (string)p.viewName;
+
+                                                       session.Store(template, Constants.RavenViewDocumentPrefix + viewName);
+                                                       session.SaveChanges();
+
+                                                       return "Success";
+                                                   };
 
             Post["/new/"] = p =>
                                 {
