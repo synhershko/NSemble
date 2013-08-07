@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using NSemble.Core.Models;
 using NSemble.Core.Nancy;
 using NSemble.Core.Tasks;
@@ -18,6 +19,8 @@ namespace NSemble.Modules.Blog
 {
     public sealed class BlogModule : NSembleModule
     {
+        const int PageSize = 15;
+
         public BlogModule(IDocumentSession session)
             : base("Blog")
         {
@@ -83,54 +86,74 @@ namespace NSemble.Modules.Blog
 
             Get["/"] = o =>
                            {
-                               var posts = session.Query<BlogPost>()
-                                                       .Where(x => x.CurrentState == BlogPost.State.Public)
-                                                       .OrderByDescending(x => x.PublishedAt)
-                                                       .Take(15)
-                                                       .ToList();
-
                                ((PageModel)Model.Page).Title = "Blog roll";
-                               Model.AreaPrefix = AreaRoutePrefix;
-                               Model.BlogPosts = posts;
                                Model.ListTitle = string.Empty;
 
-                               return View["ListBlogPosts", Model];
+                               return GetPosts(session);
                            };
+            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})"] = p => GetPosts(session, p.year, null, null, null);
+            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])"] = p => GetPosts(session, p.year, p.month, null, null);
 
-            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})"] = p =>
-                                                                 {
-                                                                     int year = p.year;
-                                                                     var posts = session.Query<BlogPost>()
-                                                                         .Where(x => x.PublishedAt.Year == year)
-                                                                         .Where(x => x.CurrentState == BlogPost.State.Public)
-                                                                         .OrderByDescending(x => x.PublishedAt)
-                                                                         .Take(15)
-                                                                         .ToList();
+            //Get["/page/(?<id>\d+)"]
 
-                                                                     Model.AreaPrefix = AreaRoutePrefix;
-                                                                     Model.BlogPosts = posts;
-                                                                     ((PageModel)Model.Page).Title = Model.ListTitle = String.Format("All blog posts of the year {0}", p.year);
+            Get["/tagged/{tagname}/page/{page?1}"] = p => GetPostsByTag(session, (string) p.tagname, (int) p.page);
+            Get["/tagged/{tagname}"] = p => GetPostsByTag(session, (string)p.tagname, 1);
+        }
 
-                                                                     return View["ListBlogPosts", Model];
-                                                                 };
+        private object GetPosts(IDocumentSession session, int? year = null, int? month = null, IEnumerable<string> tags = null, int? page = null)
+        {
+            StringBuilder pageHeader = null;
+                   
+            var postsQuery = session.Query<BlogPost>();
+            if (year != null && month != null)
+            {
+                pageHeader = new StringBuilder(String.Format("All blog posts of month {0} of the year {1}", month.Value, year.Value));
+                postsQuery = postsQuery.Where(x => x.PublishedAt.Year == year && x.PublishedAt.Month == month);
+            }
+            else if (year != null)
+            {
+                pageHeader = new StringBuilder(String.Format("All blog posts of the year {0}", year.Value));
+                postsQuery = postsQuery.Where(x => x.PublishedAt.Year == year);
+            }
 
-            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])"] = p =>
-                                                                                         {
-                                                                                             int year = p.year;
-                                                                                             int month = p.month;
-                                                                                             var posts = session.Query<BlogPost>()
-                                                                                                 .Where(x => x.PublishedAt.Year == year && x.PublishedAt.Month == month)
-                                                                                                 .Where(x => x.CurrentState == BlogPost.State.Public)
-                                                                                                 .OrderByDescending(x => x.PublishedAt)
-                                                                                                 .Take(15)
-                                                                                                 .ToList();
+            if (tags != null)
+            {
+                if (pageHeader != null) pageHeader.AppendFormat(" tagged {0}", String.Join(", ", tags));
+                foreach (var tag in tags)
+                {
+                    postsQuery = postsQuery.Where(x => x.Tags.Any(t => t == tag));
+                }
+            }
 
-                                                                                             Model.AreaPrefix = AreaRoutePrefix;
-                                                                                             Model.BlogPosts = posts;
-                                                                                             ((PageModel)Model.Page).Title = Model.ListTitle = String.Format("All blog posts of month {0} of the year {1}", p.month, p.year);
+            RavenQueryStatistics stats;
+            var posts = postsQuery.Where(x => x.CurrentState == BlogPost.State.Public)
+                .OrderByDescending(x => x.PublishedAt)
+                .Statistics(out stats)
+                .Skip(((page ?? 1) - 1) * PageSize).Take(PageSize)
+                .ToList();
 
-                                                                                             return View["ListBlogPosts", Model];
-                                                                                         };
+            Model.AreaPrefix = AreaRoutePrefix;
+            Model.BlogPosts = posts;
+            Model.TotalBlogPosts = stats.TotalResults;
+            if (pageHeader != null) ((PageModel) Model.Page).Title = Model.ListTitle = pageHeader.ToString();
+
+            return View["ListBlogPosts", Model];
+        }
+
+        private object GetPostsByTag(IDocumentSession session, string tagname, int page = 1)
+        {
+            var posts = session.Query<BlogPost>()
+                               .Where(x => x.Tags.Any(tag => tag == tagname))
+                               .Where(x => x.CurrentState == BlogPost.State.Public)
+                               .OrderByDescending(x => x.PublishedAt)
+                               .Take(page * PageSize)
+                               .ToList();
+
+            Model.AreaPrefix = AreaRoutePrefix;
+            Model.BlogPosts = posts;
+            ((PageModel)Model.Page).Title = Model.ListTitle = String.Format("All blog posts tagged {0}", tagname);
+
+            return View["ListBlogPosts", Model];
         }
 
         private static BlogPost GetBlogPost(int id, string key, IDocumentSession session)
@@ -154,6 +177,9 @@ namespace NSemble.Modules.Blog
             var widget = new RecentPostsWidget("RecentPosts", "Region");
             widget.Content = session.Query<BlogPost>().Where(x => x.CurrentState == BlogPost.State.Public).OrderByDescending(x => x.PublishedAt).Take(10).ToArray();
             widgets.Add(widget);
+
+            // TODO tag cloud
+            // TODO static content
 
             Model.Widgets = widgets;
         }
