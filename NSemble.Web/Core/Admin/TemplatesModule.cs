@@ -30,7 +30,7 @@ namespace NSemble.Web.Core.Admin
                                                 // Even if we don't have it stored in the DB, it might still exist as a resource. Try loading it from Nancy.
                                                 if (template == null)
                                                 {
-                                                    ViewLocationResult vlr = viewLocator.LocateView(viewName, Context);
+                                                    var vlr = viewLocator.LocateView(viewName, Context);
                                                     if (vlr == null)
                                                         return 404;
 
