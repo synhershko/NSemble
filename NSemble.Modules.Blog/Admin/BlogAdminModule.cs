@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using NSemble.Core.Extensions;
 using NSemble.Core.Models;
 using NSemble.Modules.Blog.Helpers;
 using NSemble.Modules.Blog.Models;
@@ -46,9 +48,13 @@ namespace NSemble.Modules.Blog.Admin
                 post.AuthorId = identity.Id;
 
                 string tags = Request.Form.TagsAsString;
+                post.Tags = new HashSet<string>();
                 if (!String.IsNullOrWhiteSpace(tags))
                 {
-                    post.Tags = tags.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var tag in tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        post.Tags.Add(tag.Trim());
+                    }
                 }
 
                 session.Store(post);
@@ -87,9 +93,13 @@ namespace NSemble.Modules.Blog.Admin
                 blogPost.Content = input.Content;
 
                 string tags = Request.Form.TagsAsString;
+                blogPost.Tags = new HashSet<string>();
                 if (!String.IsNullOrWhiteSpace(tags))
                 {
-                    blogPost.Tags = tags.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var tag in tags.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        blogPost.Tags.Add(tag.Trim());
+                    }
                 }
                 blogPost.LastEditedAt = DateTimeOffset.UtcNow;
 
