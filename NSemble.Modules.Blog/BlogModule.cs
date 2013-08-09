@@ -51,7 +51,7 @@ namespace NSemble.Modules.Blog
                                              return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')), RedirectResponse.RedirectType.Permanent);
 
                                          ((PageModel)Model.Page).Title = post.Title;
-                                         Model.AreaPrefix = AreaRoutePrefix;
+                                         ViewBag.AreaRoutePrefix = AreaRoutePrefix;
                                          Model.BlogPost = post;
                                          Model.Comments = session.Load<PostComments>(post.Id + "/comments");
 
@@ -79,7 +79,7 @@ namespace NSemble.Modules.Blog
 
                                                           TaskExecutor.ExcuteLater(new AddCommentTask(post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress}));
 
-                                                          Model.AreaPrefix = AreaRoutePrefix;
+                                                          ViewBag.AreaRoutePrefix = AreaRoutePrefix;
 
                                                           return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
                                                       };
@@ -143,7 +143,7 @@ namespace NSemble.Modules.Blog
                 .Skip(((page ?? 1) - 1) * PageSize).Take(PageSize)
                 .ToList();
 
-            Model.AreaPrefix = AreaRoutePrefix;
+            ViewBag.AreaRoutePrefix = AreaRoutePrefix;
             Model.Year = year;
             Model.Month = month;
 
@@ -168,7 +168,7 @@ namespace NSemble.Modules.Blog
                                .Take(page * PageSize)
                                .ToList();
 
-            Model.AreaPrefix = AreaRoutePrefix;
+            ViewBag.AreaRoutePrefix = AreaRoutePrefix;
             Model.BlogPosts = posts;
             ((PageModel)Model.Page).Title = Model.ListTitle = String.Format("All blog posts tagged {0}", tagname);
 

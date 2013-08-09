@@ -4,5 +4,5 @@
 
 @foreach (var post in Model)
 {
-    <p><a href="#" rel="nofollow">@post.Title</a></p>
+    <p><a href="@NSemble.Modules.Blog.Helpers.UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix)" rel="nofollow">@post.Title</a></p>
 }
