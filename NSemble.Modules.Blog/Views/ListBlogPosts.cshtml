@@ -9,7 +9,7 @@
 
 @foreach (var post in Model.BlogPosts)
 {
-    <h3><a href="@UrlHelpers.ToUrl(post, (string) ViewBag.AreaPrefix)">@post.Title</a></h3>
+    <h3><a href="@UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix)">@post.Title</a></h3>
     
     <div>
         @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
@@ -22,10 +22,11 @@
 <p style="text-align: center">
    @if (Model.CurrentPage > 1)
    {
-       <a href="@UrlHelpers.BlogUrl((string)ViewBag.AreaPrefix, (int?)Model.Year, (int?)Model.Month, null, (int) Model.CurrentPage - 1)">Previous page</a>
+       <a href="@UrlHelpers.BlogUrl((string)ViewBag.AreaRoutePrefix, (int?)Model.Year, (int?)Model.Month, null, (int) Model.CurrentPage - 1)">Previous page</a>
    }
+
    @if ((Model.CurrentPage * Model.PageSize) < Model.TotalBlogPosts)
    {
-       <a href="@UrlHelpers.BlogUrl((string)ViewBag.AreaPrefix, (int?)Model.Year, (int?)Model.Month, null, (int) Model.CurrentPage + 1)">Next page</a>
+       <a href="@UrlHelpers.BlogUrl((string)ViewBag.AreaRoutePrefix, (int?)Model.Year, (int?)Model.Month, null, (int) Model.CurrentPage + 1)">Next page</a>
    } 
 </p>
