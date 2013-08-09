@@ -107,8 +107,8 @@ namespace NSemble.Modules.Blog
             Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/page/(?<page>\d+)"] = p => GetPosts(session, p.year, p.month, null, p.page);
 
             // By tag
-            Get[@"/tagged/{tagname}"] = p => GetPostsByTag(session, (string)p.tagname);
-            Get[@"/tagged/{tagname}/page/{page?1}"] = p => GetPostsByTag(session, (string) p.tagname, (int) p.page);
+            Get[@"/tagged/{tagname}"] = p => GetPosts(session, null, null, new[] { (string)p.tagname });
+            Get[@"/tagged/{tagname}/page/{page?1}"] = p => GetPosts(session, null, null, new[] { (string)p.tagname }, (int)p.page);
         }
 
         private object GetPosts(IDocumentSession session, int? year = null, int? month = null, IEnumerable<string> tags = null, int? page = null)
@@ -118,18 +118,19 @@ namespace NSemble.Modules.Blog
             var postsQuery = session.Query<BlogPost>();
             if (year != null && month != null)
             {
-                pageHeader = new StringBuilder(String.Format("All blog posts of month {0} of the year {1}", month.Value, year.Value));
+                pageHeader = new StringBuilder(String.Format(" of month {0} of the year {1}", month.Value, year.Value));
                 postsQuery = postsQuery.Where(x => x.PublishedAt.Year == year && x.PublishedAt.Month == month);
             }
             else if (year != null)
             {
-                pageHeader = new StringBuilder(String.Format("All blog posts of the year {0}", year.Value));
+                pageHeader = new StringBuilder(String.Format(" of the year {0}", year.Value));
                 postsQuery = postsQuery.Where(x => x.PublishedAt.Year == year);
             }
 
             if (tags != null)
             {
-                if (pageHeader != null) pageHeader.AppendFormat(" tagged {0}", String.Join(", ", tags));
+                if (pageHeader == null) pageHeader = new StringBuilder();
+                pageHeader.AppendFormat(" tagged {0}", String.Join(", ", tags));
                 foreach (var tag in tags)
                 {
                     postsQuery = postsQuery.Where(x => x.Tags.Any(t => t == tag));
@@ -154,23 +155,11 @@ namespace NSemble.Modules.Blog
             Model.CurrentPage = page ?? 1;
             Model.PageSize = PageSize;
 
-            if (pageHeader != null) ((PageModel) Model.Page).Title = Model.ListTitle = pageHeader.ToString();
-
-            return View["ListBlogPosts", Model];
-        }
-
-        private object GetPostsByTag(IDocumentSession session, string tagname, int page = 1)
-        {
-            var posts = session.Query<BlogPost>()
-                               .Where(x => x.Tags.Any(tag => tag == tagname))
-                               .Where(x => x.CurrentState == BlogPost.State.Public)
-                               .OrderByDescending(x => x.PublishedAt)
-                               .Take(page * PageSize)
-                               .ToList();
-
-            ViewBag.AreaRoutePrefix = AreaRoutePrefix;
-            Model.BlogPosts = posts;
-            ((PageModel)Model.Page).Title = Model.ListTitle = String.Format("All blog posts tagged {0}", tagname);
+            if (pageHeader != null)
+            {
+                pageHeader.Insert(0, "All blog posts");
+                ((PageModel) Model.Page).Title = Model.ListTitle = pageHeader.ToString();
+            }
 
             return View["ListBlogPosts", Model];
         }
