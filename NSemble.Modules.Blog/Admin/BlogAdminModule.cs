@@ -57,6 +57,9 @@ namespace NSemble.Modules.Blog.Admin
                     }
                 }
 
+                if ("Publish".Equals(Request.Form["SubmitAction"]))
+                    post.CurrentState = BlogPost.State.Public;
+
                 session.Store(post);
                 session.Store(new PostComments(), post.Id + "/comments");
                 session.SaveChanges();
@@ -102,6 +105,9 @@ namespace NSemble.Modules.Blog.Admin
                     }
                 }
                 blogPost.LastEditedAt = DateTimeOffset.UtcNow;
+
+                if ("Publish".Equals(Request.Form["SubmitAction"]))
+                    blogPost.CurrentState = BlogPost.State.Public;
 
                 session.SaveChanges();
 
