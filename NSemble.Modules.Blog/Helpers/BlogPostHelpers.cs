@@ -8,18 +8,6 @@ namespace NSemble.Modules.Blog.Helpers
 {
     public static class BlogPostHelpers
     {
-        public static string ToUrl(this BlogPost post, string prefix)
-        {
-            return string.Concat(prefix, "/", post.PublishedAt.Year, "/", post.PublishedAt.Month.ToString("D2"), "/",
-                                 post.Id.Substring(post.Id.IndexOf("/", StringComparison.Ordinal) + 1), "-", post.Slug);
-        }
-
-        public static string ToAdminEditUrl(this BlogPost post, string prefix)
-        {
-            return string.Concat(prefix, "/", post.PublishedAt.Year, "/", post.PublishedAt.Month.ToString("D2"), "/",
-                                 post.Id.Substring(post.Id.IndexOf("/", StringComparison.Ordinal) + 1), "-", post.Slug);
-        }
-
         public static IHtmlString Gravatar(this PostComments.Comment comment, int size)
         {
             var ret = string.Format(@"<img src=""http://www.gravatar.com/avatar.php?gravatar_id={0}&size={1}&default=identicon"" alt=""{2}"" width=""{1}"" height=""{1}"">"

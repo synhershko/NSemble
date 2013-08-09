@@ -84,6 +84,7 @@ namespace NSemble.Modules.Blog
                                                           return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
                                                       };
 
+            // Home
             Get["/"] = o =>
                            {
                                ((PageModel)Model.Page).Title = "Blog roll";
@@ -91,13 +92,23 @@ namespace NSemble.Modules.Blog
 
                                return GetPosts(session);
                            };
+            Get[@"/page/(?<page>\d+)"] = o =>
+                           {
+                               ((PageModel)Model.Page).Title = "Blog roll";
+                               Model.ListTitle = string.Empty;
+
+                               return GetPosts(session, null, null, null, o.page ?? 1);
+                           };
+
+            // Archive
             Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})"] = p => GetPosts(session, p.year, null, null, null);
+            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/page/(?<page>\d+)"] = p => GetPosts(session, p.year, null, null, p.page);
             Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])"] = p => GetPosts(session, p.year, p.month, null, null);
+            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/page/(?<page>\d+)"] = p => GetPosts(session, p.year, p.month, null, p.page);
 
-            //Get["/page/(?<id>\d+)"]
-
-            Get["/tagged/{tagname}/page/{page?1}"] = p => GetPostsByTag(session, (string) p.tagname, (int) p.page);
-            Get["/tagged/{tagname}"] = p => GetPostsByTag(session, (string)p.tagname, 1);
+            // By tag
+            Get[@"/tagged/{tagname}"] = p => GetPostsByTag(session, (string)p.tagname);
+            Get[@"/tagged/{tagname}/page/{page?1}"] = p => GetPostsByTag(session, (string) p.tagname, (int) p.page);
         }
 
         private object GetPosts(IDocumentSession session, int? year = null, int? month = null, IEnumerable<string> tags = null, int? page = null)
@@ -133,8 +144,16 @@ namespace NSemble.Modules.Blog
                 .ToList();
 
             Model.AreaPrefix = AreaRoutePrefix;
+            Model.Year = year;
+            Model.Month = month;
+
             Model.BlogPosts = posts;
+
+            // Paging info
             Model.TotalBlogPosts = stats.TotalResults;
+            Model.CurrentPage = page ?? 1;
+            Model.PageSize = PageSize;
+
             if (pageHeader != null) ((PageModel) Model.Page).Title = Model.ListTitle = pageHeader.ToString();
 
             return View["ListBlogPosts", Model];

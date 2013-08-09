@@ -1,4 +1,5 @@
 ﻿@using System
+@using NSemble.Modules.Blog.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{
     Layout = "_BlogLayout.cshtml";
@@ -8,7 +9,7 @@
 
 @foreach (var post in Model.BlogPosts)
 {
-    <h3><a href="@NSemble.Modules.Blog.Helpers.BlogPostHelpers.ToUrl(post, (string) Model.AreaPrefix)">@post.Title</a></h3>
+    <h3><a href="@UrlHelpers.ToUrl(post, (string) Model.AreaPrefix)">@post.Title</a></h3>
     
     <div>
         @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
@@ -17,4 +18,14 @@
     <hr/>
 }
 
-<p>Showing @Model.BlogPosts.Count posts out of @Model.TotalBlogPosts total</p>
+<p style="text-align: center">Showing @Model.BlogPosts.Count posts out of @Model.TotalBlogPosts total, page @Model.CurrentPage</p>
+<p style="text-align: center">
+   @if (Model.CurrentPage > 1)
+   {
+       <a href="@UrlHelpers.BlogUrl((string)Model.AreaPrefix, (int?)Model.Year, (int?)Model.Month, null, (int) Model.CurrentPage - 1)">Previous page</a>
+   }
+   @if ((Model.CurrentPage * Model.PageSize) < Model.TotalBlogPosts)
+   {
+       <a href="@UrlHelpers.BlogUrl((string)Model.AreaPrefix, (int?)Model.Year, (int?)Model.Month, null, (int) Model.CurrentPage + 1)">Next page</a>
+   } 
+</p>
