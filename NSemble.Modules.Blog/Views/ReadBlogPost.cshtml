@@ -1,10 +1,18 @@
-﻿@using NSemble.Core.Models
+﻿@using NSemble.Modules.Blog.Models
+@using NSemble.Core.Models
+@using NSemble.Core.Extensions
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{
     Layout = "_BlogLayout.cshtml";
+    BlogPost post = Model.BlogPost;
 }
 
-<h3>@Model.BlogPost.Title</h3>
+<div>
+    <h3>@Model.BlogPost.Title</h3>
+    <small>Posted @HtmlExtensions.Html5DateTimeTag(post.PublishedAt)</small>
+</div>
+
+<hr/>
 
 <div>@NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(Model.BlogPost)</div>
 
