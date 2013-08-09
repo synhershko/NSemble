@@ -19,7 +19,7 @@ namespace NSemble.Modules.Blog
 {
     public sealed class BlogModule : NSembleModule
     {
-        const int PageSize = 15;
+        const int PageSize = 10;
 
         public BlogModule(IDocumentSession session)
             : base("Blog")
