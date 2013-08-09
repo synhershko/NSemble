@@ -1,4 +1,5 @@
 ﻿using NSemble.Core.Models;
+using Raven.Client;
 
 namespace NSemble.Core.Widgets
 {
@@ -10,7 +11,14 @@ namespace NSemble.Core.Widgets
 
         public override string ViewName
         {
-            get { return "Foo.cshtml"; }
+            get { return "Widgets/StaticContentWidget.cshtml"; }
+        }
+
+        public string Content { get; set; }
+
+        public override dynamic GetViewContent(IDocumentSession session)
+        {
+            return Content;
         }
     }
 }

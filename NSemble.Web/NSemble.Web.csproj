@@ -132,6 +132,8 @@
     <Content Include="Modules\Membership\Views\Login.cshtml" />
     <Content Include="Views\_Layout.cshtml" />
     <Content Include="Web.config" />
+    <None Include="Properties\PublishProfiles\Deploy.pubxml" />
+    <Content Include="Views\Widgets\StaticContentWidget.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Admin\RedirectsModule.cs" />

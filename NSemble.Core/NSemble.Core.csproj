@@ -81,6 +81,7 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ViewTemplate.cs" />
     <Compile Include="Models\Widget.cs" />
+    <Compile Include="Models\WidgetViewModel.cs" />
     <Compile Include="Nancy\NSembleAdminModule.cs" />
     <Compile Include="Nancy\NSembleModule.cs" />
     <Compile Include="Nancy\NSembleResourceAssemblyProvider.cs" />

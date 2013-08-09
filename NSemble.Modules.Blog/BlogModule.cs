@@ -189,16 +189,13 @@ namespace NSemble.Modules.Blog
 
         protected override void LoadWidgets(IDocumentSession session)
         {
-            session.Load<BlogConfig>("NSemble/Configs/" + "areaName");// TODO: Constants, admin create
+            var widgets = new List<WidgetViewModel>();
 
-            // TODO use area config doc to load these
-            var widgets = new List<Widget>();
-            var widget = new RecentPostsWidget("RecentPosts", "Region");
-            widget.Content = session.Query<BlogPost>().Where(x => x.CurrentState == BlogPost.State.Public).OrderByDescending(x => x.PublishedAt).Take(10).ToArray();
-            widgets.Add(widget);
-
-            // TODO tag cloud
-            // TODO static content
+            var blogConfig = session.Load<BlogConfig>("NSemble/Configs/MyBlog");// TODO: Use AreaConfigs, Constants, admin create
+            if (blogConfig != null)
+            {
+                widgets.AddRange(blogConfig.Widgets.Select(widget => new WidgetViewModel(session, widget)));
+            }
 
             Model.Widgets = widgets;
         }
