@@ -14,8 +14,9 @@
     
     <div>
         @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
+
+        <small>Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @String.Join(", ", post.Tags) | Comments (@post.CommentsCount)</small>
     </div>
-    <div style="background-color: #ccc">Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @String.Join(", ", post.Tags) | Comments (@post.CommentsCount)</div>
     <hr/>
 }
 
