@@ -1,25 +1,34 @@
 ﻿using System;
 using Raven.Abstractions.Exceptions;
 using Raven.Client;
+using Raven.Client.Document;
 
 namespace NSemble.Core.Tasks
 {
 	public abstract class ExecutableTask
 	{
-		protected IDocumentSession DocumentSession;
+	    public IDocumentStore RavenDocumentStore { get; protected set; }
+	    protected IDocumentSession DocumentSession;
 
-		protected virtual void Initialize(IDocumentSession session)
+	    protected virtual void Initialize(IDocumentSession session)
 		{
-			DocumentSession = session;
-			DocumentSession.Advanced.UseOptimisticConcurrency = true;
+	        if (session == null) return;
+	        DocumentSession = session;
+	        DocumentSession.Advanced.UseOptimisticConcurrency = true;
 		}
 
 		protected virtual void OnError(Exception e)
 		{
 		}
 
-		public bool? Run(IDocumentSession openSession)
+		public bool? Run()
 		{
+		    IDocumentSession openSession = null;
+            if (RavenDocumentStore != null)
+            {
+                openSession = RavenDocumentStore.OpenSession();
+            }
+
 			Initialize(openSession);
 			try
 			{
@@ -40,6 +49,7 @@ namespace NSemble.Core.Tasks
 			}
 			finally
 			{
+                if (openSession != null) openSession.Dispose();
 				TaskExecutor.Discard();
 			}
 		}

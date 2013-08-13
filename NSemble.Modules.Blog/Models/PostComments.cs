@@ -72,6 +72,8 @@ namespace NSemble.Modules.Blog.Models
                     return false;
                 }
 
+                if (string.IsNullOrWhiteSpace(Website)) return true;
+
                 Uri uri;
                 return Uri.TryCreate(Website, UriKind.Absolute, out uri);
             }

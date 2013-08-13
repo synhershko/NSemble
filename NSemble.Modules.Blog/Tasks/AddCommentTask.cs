@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using NSemble.Core.Tasks;
 using NSemble.Modules.Blog.Models;
+using Raven.Client;
+using Raven.Client.Document;
 
 namespace NSemble.Modules.Blog.Tasks
 {
@@ -18,11 +20,12 @@ namespace NSemble.Modules.Blog.Tasks
 		private readonly RequestValues requestValues;
 		private readonly string postId;
 
-		public AddCommentTask(string postId, PostComments.CommentInput commentInput, RequestValues requestValues)
+		public AddCommentTask(IDocumentStore documentStore, string postId, PostComments.CommentInput commentInput, RequestValues requestValues)
 		{
 			this.commentInput = commentInput;
 			this.requestValues = requestValues;
 			this.postId = postId;
+		    this.RavenDocumentStore = documentStore;
 		}
 
 		public override void Execute()

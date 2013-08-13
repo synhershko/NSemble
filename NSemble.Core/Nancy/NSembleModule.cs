@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using NSemble.Core.Models;
+using NSemble.Core.Tasks;
 using Nancy;
 using Raven.Client;
 
@@ -19,12 +20,16 @@ namespace NSemble.Core.Nancy
                 throw new ArgumentException("Module name cannot contain slashes", "moduleName");
 
             SetupModelDefaults();
+
+            After += _ => TaskExecutor.StartExecuting();
         }
 
         protected NSembleModule(bool forAdmin, string modulePath)
             : base(modulePath)
         {
             SetupModelDefaults();
+
+            After += _ => TaskExecutor.StartExecuting();
         }
 
         public AreaConfigs AreaConfigs

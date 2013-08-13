@@ -1,4 +1,5 @@
-﻿@using NSemble.Modules.Blog.Models
+﻿@using NSemble.Modules.Blog.Helpers
+@using NSemble.Modules.Blog.Models
 @using NSemble.Core.Models
 @using NSemble.Core.Extensions
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
@@ -33,6 +34,47 @@
     }        
     
     <hr />
+    
+    @{
+        var postUrl = UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix);
+        var commentInput = new NSemble.Modules.Blog.Models.PostComments.CommentInput();
+    }
+    <form method="post" action="@postUrl/new-comment">
+        <fieldset>
+            <legend>Add a new comment</legend>
 
-    <div style="text-align: center">Comments are closed</div>
+            <div>Name</div>
+            <div>
+                <input type="text" name="Author" value="@commentInput.Author" />
+            </div>
+         
+            <div>E-mail</div>
+            <div>
+                <input type="text" name="Email" value="@commentInput.Email" />
+            </div>
+         
+            <div>Website (optional)</div>
+            <div>
+                <input type="text" name="Website" value="@commentInput.Website" />
+            </div>
+
+            <div>
+                Your comment
+            </div>
+            <div>
+                <textarea name="Body" rows="20" style="width: 500px">@commentInput.Body</textarea>
+            </div>
+	     
+            <div>
+                2 * 4 = ?
+            </div>
+            <div>
+                <input type="text" name="HumanVerification" value="" />
+            </div>
+
+            <p>
+                <input type="submit" value="Post comment" />
+            </p>
+        </fieldset>
+    </form>
 </div>

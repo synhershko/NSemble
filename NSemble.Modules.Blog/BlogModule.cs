@@ -60,6 +60,10 @@ namespace NSemble.Modules.Blog
 
             Post[blogPostRoute + "/new-comment"] = p =>
                                                       {
+                                                          var commentInput = this.Bind<PostComments.CommentInput>();
+                                                          if (!commentInput.IsValid() || !"8".Equals(Request.Form["HumanVerification"]))
+                                                              return "Error"; // TODO
+
                                                           BlogPost post;
                                                           try
                                                           {
@@ -71,15 +75,9 @@ namespace NSemble.Modules.Blog
                                                           }
 
                                                           if (!post.AllowComments)
-                                                              return 403; // Comments are closed for this post
+                                                              return "Comments are closed for this post";
 
-                                                          var commentInput = this.Bind<PostComments.CommentInput>();
-                                                          if (!commentInput.IsValid())
-                                                              return "Error"; // TODO
-
-                                                          TaskExecutor.ExcuteLater(new AddCommentTask(post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress}));
-
-                                                          ViewBag.AreaRoutePrefix = AreaRoutePrefix;
+                                                          TaskExecutor.ExcuteLater(new AddCommentTask(session.Advanced.DocumentStore, post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress}));
 
                                                           return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
                                                       };
