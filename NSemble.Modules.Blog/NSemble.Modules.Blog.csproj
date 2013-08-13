@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\BlogAdminModule.cs" />
+    <Compile Include="Helpers\AkismetValidator.cs" />
     <Compile Include="BlogModule.cs" />
     <Compile Include="Helpers\BlogPostHelpers.cs" />
     <Compile Include="Helpers\UrlHelpers.cs" />

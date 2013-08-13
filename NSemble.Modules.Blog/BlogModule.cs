@@ -28,7 +28,12 @@ namespace NSemble.Modules.Blog
 
             const string blogPostRoute = @"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/(?<id>\d+)-(?<slug>.+)";
 
-            LoadWidgets(session);
+            BlogConfig blogConfig;
+            using (session.Advanced.DocumentStore.AggressivelyCacheFor(TimeSpan.FromMinutes(5)))
+            {
+                blogConfig = session.Load<BlogConfig>("NSemble/Configs/MyBlog");
+            }
+            LoadWidgets(session, blogConfig);
 
             Get[blogPostRoute] = p =>
                                      {
@@ -77,7 +82,7 @@ namespace NSemble.Modules.Blog
                                                           if (!post.AllowComments)
                                                               return "Comments are closed for this post";
 
-                                                          TaskExecutor.ExcuteLater(new AddCommentTask(session.Advanced.DocumentStore, post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress}));
+                                                          TaskExecutor.ExcuteLater(new AddCommentTask(session.Advanced.DocumentStore, blogConfig, post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress}));
 
                                                           return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
                                                       };
@@ -174,11 +179,11 @@ namespace NSemble.Modules.Blog
             return post;
         }
 
-        protected override void LoadWidgets(IDocumentSession session)
+        private void LoadWidgets(IDocumentSession session, BlogConfig blogConfig)
         {
             var widgets = new List<WidgetViewModel>();
 
-            var blogConfig = session.Load<BlogConfig>("NSemble/Configs/MyBlog");// TODO: Use AreaConfigs, Constants, admin create
+            // TODO: Use AreaConfigs, Constants, admin create
             if (blogConfig != null)
             {
                 widgets.AddRange(blogConfig.Widgets.Select(widget => new WidgetViewModel(session, widget)));

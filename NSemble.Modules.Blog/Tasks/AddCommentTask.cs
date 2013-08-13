@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NSemble.Core.Tasks;
+using NSemble.Modules.Blog.Helpers;
 using NSemble.Modules.Blog.Models;
 using Raven.Client;
 using Raven.Client.Document;
@@ -16,13 +17,15 @@ namespace NSemble.Modules.Blog.Tasks
 			public bool IsAuthenticated { get; set; }
 		}
 
-		private readonly PostComments.CommentInput commentInput;
+        private readonly BlogConfig _config;
+        private readonly PostComments.CommentInput commentInput;
 		private readonly RequestValues requestValues;
 		private readonly string postId;
 
-		public AddCommentTask(IDocumentStore documentStore, string postId, PostComments.CommentInput commentInput, RequestValues requestValues)
+		public AddCommentTask(IDocumentStore documentStore, BlogConfig config, string postId, PostComments.CommentInput commentInput, RequestValues requestValues)
 		{
-			this.commentInput = commentInput;
+		    _config = config;
+		    this.commentInput = commentInput;
 			this.requestValues = requestValues;
 			this.postId = postId;
 		    this.RavenDocumentStore = documentStore;
@@ -42,10 +45,21 @@ namespace NSemble.Modules.Blog.Tasks
 			              		UserHostAddress = requestValues.UserHostAddress,
                                 Replies = new List<PostComments.Comment>(),
 			              	};
-		    var isSpam = false; // TODO AkismetService.CheckForSpam(comment);
+
+            var isSpam = false;
+		    if (!string.IsNullOrWhiteSpace(_config.AkismetAPIKey) && !string.IsNullOrWhiteSpace(_config.AkismetDomain))
+		    {
+		        try
+		        {
+                    isSpam = AkismetValidator.IsSpam(_config.AkismetAPIKey, _config.AkismetDomain, comment);
+		        }
+		        catch (Exception ignored_ex)
+		        {
+                    // TODO log
+		        }
+		    }
 
             var post = DocumentSession.Load<BlogPost>(postId);
-			//var postAuthor = DocumentSession.Load<User>(post.AuthorId);
 			var comments = DocumentSession.Load<PostComments>(postId + "/comments");
             // TODO if (comments == null)
 
