@@ -15,7 +15,11 @@
 
 <hr/>
 
-<div>@NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(Model.BlogPost)</div>
+<div>
+    @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(Model.BlogPost)
+    
+    <p><small>Tagged @UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags)</small></p>
+</div>
 
 <hr/>
 <div>
@@ -32,9 +36,7 @@
             </div>
         }
     }        
-    
-    <hr />
-    
+        
     @{
         var postUrl = UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix);
         var commentInput = new NSemble.Modules.Blog.Models.PostComments.CommentInput();
