@@ -15,7 +15,7 @@
     <div>
         @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
 
-        <small>Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @String.Join(", ", post.Tags) | Comments (@post.CommentsCount)</small>
+        <small>Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags) | Comments (@post.CommentsCount)</small>
     </div>
     <hr/>
 }
