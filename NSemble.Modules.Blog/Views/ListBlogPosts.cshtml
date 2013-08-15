@@ -10,12 +10,13 @@
 
 @foreach (var post in Model.BlogPosts)
 {
-    <h3><a href="@UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix)">@post.Title</a></h3>
+    var postUrl = UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix);
+    <h3><a href="@postUrl">@post.Title</a></h3>
     
     <div>
         @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
 
-        <small>Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags) | Comments (@post.CommentsCount)</small>
+        <small>Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags) | <a href="@postUrl#comments">Comments (@post.CommentsCount)</a></small>
     </div>
     <hr/>
 }
