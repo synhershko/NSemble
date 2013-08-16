@@ -54,6 +54,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Razor.Unofficial">
       <HintPath>..\packages\System.Web.Razor.Unofficial.2.0.2\lib\net40\System.Web.Razor.Unofficial.dll</HintPath>
     </Reference>
@@ -68,6 +69,7 @@
     <Compile Include="Helpers\AkismetValidator.cs" />
     <Compile Include="BlogModule.cs" />
     <Compile Include="Helpers\BlogPostHelpers.cs" />
+    <Compile Include="Helpers\RssResponse.cs" />
     <Compile Include="Helpers\UrlHelpers.cs" />
     <Compile Include="Models\BlogConfig.cs" />
     <Compile Include="Models\BlogPost.cs" />
@@ -76,7 +78,6 @@
     <Compile Include="Tasks\AddCommentTask.cs" />
     <Compile Include="Widgets\RecentPostsWidget.cs" />
     <Compile Include="Widgets\TagCloudWidget.cs" />
-    <Compile Include="WordPressStats.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

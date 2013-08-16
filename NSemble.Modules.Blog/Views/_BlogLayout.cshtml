@@ -4,6 +4,10 @@
     Layout = "_Layout.cshtml";
 }
 
+@section HeadArea {
+    <link id="AtomLink" title="RSS" type="application/rss+xml" rel="alternate" href="@ViewBag.AreaRoutePrefix/rss">
+}
+
 <div class="row">
     <div class="span12">
         <h2>My blog</h2>

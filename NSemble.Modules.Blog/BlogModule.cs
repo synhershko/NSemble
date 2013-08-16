@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using NSemble.Core.Models;
@@ -8,7 +9,6 @@ using NSemble.Core.Tasks;
 using NSemble.Modules.Blog.Helpers;
 using NSemble.Modules.Blog.Models;
 using NSemble.Modules.Blog.Tasks;
-using NSemble.Modules.Blog.Widgets;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Responses;
@@ -47,8 +47,8 @@ namespace NSemble.Modules.Blog
                                              return e.Message;
                                          }
 
-                                         int year = (int) p.year;
-                                         int month = (int) p.month;
+                                         int year = (int)p.year;
+                                         int month = (int)p.month;
                                          if (post.PublishedAt.Month != month || post.PublishedAt.Year != year)
                                              return 404;
 
@@ -82,7 +82,7 @@ namespace NSemble.Modules.Blog
                                                           if (!post.AllowComments)
                                                               return "Comments are closed for this post";
 
-                                                          TaskExecutor.ExcuteLater(new AddCommentTask(session.Advanced.DocumentStore, blogConfig, post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress}));
+                                                          TaskExecutor.ExcuteLater(new AddCommentTask(session.Advanced.DocumentStore, blogConfig, post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress }));
 
                                                           return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));
                                                       };
@@ -112,12 +112,47 @@ namespace NSemble.Modules.Blog
             // By tag
             Get[@"/tagged/{tagname}"] = p => GetPosts(session, null, null, new[] { (string)p.tagname });
             Get[@"/tagged/{tagname}/page/{page?1}"] = p => GetPosts(session, null, null, new[] { (string)p.tagname }, (int)p.page);
+
+            // RSS feed
+            Get[@"/rss"] = p =>
+                               {
+                                   // Limit older posts from appearing in the feed
+                                   var dateThreshold = DateTimeOffset.UtcNow.AddMonths(-6);
+                                   dateThreshold = new DateTimeOffset(dateThreshold.Year, dateThreshold.Month, dateThreshold.Day,
+                                                                      0, 0, 0, dateThreshold.Offset);
+
+                                   RavenQueryStatistics stats;
+                                   var postsQuery = session.Query<BlogPost>().Statistics(out stats)
+                                                           .Where(x => x.PublishedAt >= dateThreshold)
+                                                           .Where(x => x.CurrentState == BlogPost.State.Public)
+                                                           .OrderByDescending(x => x.PublishedAt)
+                                                           .Take(20);
+
+                                   if (!string.IsNullOrWhiteSpace(Request.Query.tagged))
+                                   {
+                                       var tags = ((string)Request.Query.tagged).Split(',');
+                                       foreach (var tag in tags)
+                                       {
+                                           postsQuery = postsQuery.Where(x => x.Tags.Any(t => t == tag));
+                                       }
+                                   }
+
+                                   var blogPosts = postsQuery.ToList();
+
+                                   string responseETagHeader;
+                                   if (CheckEtag(stats, out responseETagHeader))
+                                       return HttpStatusCode.NotModified;
+
+                                   
+
+                                   return new RssResponse(blogPosts, new Uri(Context.Request.Url, AreaRoutePrefix), blogConfig);
+                               };
         }
 
         private object GetPosts(IDocumentSession session, int? year = null, int? month = null, IEnumerable<string> tags = null, int? page = null)
         {
             StringBuilder pageHeader = null;
-                   
+
             var postsQuery = session.Query<BlogPost>();
             if (year != null && month != null)
             {
@@ -161,7 +196,7 @@ namespace NSemble.Modules.Blog
             if (pageHeader != null)
             {
                 pageHeader.Insert(0, "All blog posts");
-                ((PageModel) Model.Page).Title = Model.ListTitle = pageHeader.ToString();
+                ((PageModel)Model.Page).Title = Model.ListTitle = pageHeader.ToString();
             }
 
             return View["ListBlogPosts", Model];
@@ -177,6 +212,15 @@ namespace NSemble.Modules.Blog
                 throw new ArgumentException("Requested page could not be found");
 
             return post;
+        }
+
+        private static readonly string EtagInitValue = Guid.NewGuid().ToString();
+        private bool CheckEtag(RavenQueryStatistics stats, out string responseETagHeader)
+        {
+            responseETagHeader = stats.Timestamp.ToString("o") + EtagInitValue;
+            var requestETagHeader = Request.Headers["If-None-Match"];
+            if (requestETagHeader == null) return false;
+            return (requestETagHeader.FirstOrDefault() ?? string.Empty) == responseETagHeader;
         }
 
         private void LoadWidgets(IDocumentSession session, BlogConfig blogConfig)
