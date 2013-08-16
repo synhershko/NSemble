@@ -67,7 +67,7 @@ namespace NSemble.Modules.Blog
                                                       {
                                                           var commentInput = this.Bind<PostComments.CommentInput>();
                                                           if (!commentInput.IsValid() || !"8".Equals(Request.Form["HumanVerification"]))
-                                                              return "Error"; // TODO
+                                                              return "Error"; // TODO pass errors in Model
 
                                                           BlogPost post;
                                                           try
@@ -81,6 +81,11 @@ namespace NSemble.Modules.Blog
 
                                                           if (!post.AllowComments)
                                                               return "Comments are closed for this post";
+
+                                                          // Don't allow impersonation if we know the commenter - require users to login before commenting
+                                                          var author = session.Load<User>(commentInput.Author);
+                                                          if (author != null && !author.Equals(Context.CurrentUser))
+                                                              return "Please login to post a new comment";
 
                                                           TaskExecutor.ExcuteLater(new AddCommentTask(session.Advanced.DocumentStore, blogConfig, post.Id, commentInput, new AddCommentTask.RequestValues { UserAgent = Request.Headers.UserAgent, UserHostAddress = Request.UserHostAddress }));
 
