@@ -62,8 +62,10 @@ namespace NSemble.Modules.Blog.Tasks
             
             var post = DocumentSession.Include<BlogPost>(blogPost => blogPost.AuthorId).Load(postId);
             var postAuthor = DocumentSession.Load<User>(post.AuthorId);
+            var author = DocumentSession.Load<User>(commentInput.Author);
             DocumentSession.Advanced.MarkReadOnly(post);
             DocumentSession.Advanced.MarkReadOnly(postAuthor);
+            DocumentSession.Advanced.MarkReadOnly(author);
 
             var comments = DocumentSession.Load<PostComments>(postId + "/comments");
             // TODO if (comments == null)
