@@ -45,6 +45,14 @@ namespace NSemble.Modules.Blog.Helpers
             }
 
             return sBuilder.ToString();  // Return the hexadecimal string.  
-        }  
+        }
+
+        public const string WordPressTrackingCode = @"<script src=""http://stats.wordpress.com/e-201252.js"" type=""text/javascript""></script>
+<script type=""text/javascript"">
+st_go({blog:'{0}',v:'ext',post:'0'});
+var load_cmc = function(){linktracker_init({0},0,2);};
+if ( typeof addLoadEvent != 'undefined' ) addLoadEvent(load_cmc);
+else load_cmc();
+</script>";
     }
 }

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NSemble.Core.Extensions;
 using NSemble.Core.Models;
 using NSemble.Modules.Blog.Helpers;
 using NSemble.Modules.Blog.Models;
 using Nancy;
 using Nancy.ModelBinding;
 using Raven.Client;
+using Raven.Json.Linq;
 
 namespace NSemble.Modules.Blog.Admin
 {
@@ -16,10 +16,15 @@ namespace NSemble.Modules.Blog.Admin
         public BlogAdminModule(IDocumentSession session)
             : base("Blog")
         {
+            var blogConfig = session.Load<BlogConfig>("NSemble/Configs/MyBlog");
+
             Get["/"] = o =>
                            {
                                ViewBag.ModulePrefix = AreaRoutePrefix.TrimEnd('/');
-                               return View["List", session.Query<BlogPost>().ToArray()];
+
+                               Model.RecentPosts = session.Query<BlogPost>().Take(10).ToArray();
+
+                               return View["Home", Model];
                            };
 
             Get["/post-new/"] = p => View["Edit", new BlogPost
@@ -113,6 +118,39 @@ namespace NSemble.Modules.Blog.Admin
 
                 return Response.AsRedirect(input.ToUrl(AreaRoutePrefix.TrimEnd('/')));
             };
+
+            Get[@"/stats/{days?7}/{type?all}"] = o =>
+                                                     {
+                                                         var ret = new RavenJObject();
+
+                                                         if (blogConfig != null)
+                                                         {
+                                                             var url = string.Format(@"http://stats.wordpress.com/csv.php?api_key={0}&blog_id={1}&format=json",
+                                                                 blogConfig.WordPressAPIKey, blogConfig.WordPressBlogId);
+                                                             using (var webClient = new System.Net.WebClient())
+                                                             {
+                                                                 // TODO async, not UTF8 compatible
+                                                                 switch ((string)o.type)
+                                                                 {
+                                                                     case "searchterms":
+                                                                         ret.Add("searchterms", RavenJToken.Parse(webClient.DownloadString(url + "&table=searchterms")));
+                                                                         break;
+                                                                     case "clicks":
+                                                                         ret.Add("clicks", RavenJToken.Parse(webClient.DownloadString(url + "&table=clicks")));
+                                                                         break;
+                                                                     case "referrers":
+                                                                         ret.Add("referrers", RavenJToken.Parse(webClient.DownloadString(url + "&table=referrers_grouped")));
+                                                                         break;
+                                                                     case "views":
+                                                                     default:
+                                                                         ret.Add("histogram", RavenJToken.Parse(webClient.DownloadString(url)));
+                                                                         break;
+                                                                 }                                                                
+                                                             }
+                                                         }
+
+                                                         return Response.AsText(ret.ToString(), "text/json");
+                                                     };
         }
     }
 }

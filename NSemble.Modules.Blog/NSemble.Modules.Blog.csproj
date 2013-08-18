@@ -83,6 +83,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Admin\Views\List.cshtml" />
     <EmbeddedResource Include="Admin\Views\Edit.cshtml" />
+    <EmbeddedResource Include="Admin\Views\Home.cshtml" />
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Views\ReadBlogPost.cshtml" />
