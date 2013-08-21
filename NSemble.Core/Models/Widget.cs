@@ -1,4 +1,6 @@
-﻿namespace NSemble.Core.Models
+﻿using Raven.Client;
+
+namespace NSemble.Core.Models
 {
     public abstract class Widget
     {
@@ -11,6 +13,7 @@
         public string Name { get; set; }
         public string RegionName { get; set; }
         public abstract string ViewName { get; }
-        public dynamic Content { get; set; }
+
+        public abstract dynamic GetViewContent(IDocumentSession session);
     }
 }

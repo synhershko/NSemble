@@ -14,5 +14,18 @@ namespace NSemble.Core.Models
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as User;
+            if (other == null) return false;
+
+            return Id.Equals(other.Id) && Email.Equals(other.Email);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

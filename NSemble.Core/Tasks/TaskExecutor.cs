@@ -47,19 +47,15 @@ namespace NSemble.Core.Tasks
 
         public static void ExecuteTask(ExecutableTask task)
         {
-            var docStore = global::Nancy.TinyIoc.TinyIoCContainer.Current.Resolve<DocumentStore>();
             for (var i = 0; i < 10; i++)
             {
-                using (var session = docStore.OpenSession())
+                switch (task.Run())
                 {
-                    switch (task.Run(session))
-                    {
-                        case true:
-                        case false:
-                            return;
-                        case null:
-                            break;
-                    }
+                    case true:
+                    case false:
+                        return;
+                    case null:
+                        break;
                 }
             }
         }

@@ -8,18 +8,6 @@ namespace NSemble.Modules.Blog.Helpers
 {
     public static class BlogPostHelpers
     {
-        public static string ToUrl(this BlogPost post, string prefix)
-        {
-            return string.Concat(prefix, "/", post.PublishedAt.Year, "/", post.PublishedAt.Month.ToString("D2"), "/",
-                                 post.Id.Substring(post.Id.IndexOf("/", StringComparison.Ordinal) + 1), "-", post.Slug);
-        }
-
-        public static string ToAdminEditUrl(this BlogPost post, string prefix)
-        {
-            return string.Concat(prefix, "/", post.PublishedAt.Year, "/", post.PublishedAt.Month.ToString("D2"), "/",
-                                 post.Id.Substring(post.Id.IndexOf("/", StringComparison.Ordinal) + 1), "-", post.Slug);
-        }
-
         public static IHtmlString Gravatar(this PostComments.Comment comment, int size)
         {
             var ret = string.Format(@"<img src=""http://www.gravatar.com/avatar.php?gravatar_id={0}&size={1}&default=identicon"" alt=""{2}"" width=""{1}"" height=""{1}"">"
@@ -57,6 +45,14 @@ namespace NSemble.Modules.Blog.Helpers
             }
 
             return sBuilder.ToString();  // Return the hexadecimal string.  
-        }  
+        }
+
+        public const string WordPressTrackingCode = @"<script src=""http://stats.wordpress.com/e-201252.js"" type=""text/javascript""></script>
+<script type=""text/javascript"">
+st_go({blog:'{0}',v:'ext',post:'0'});
+var load_cmc = function(){linktracker_init({0},0,2);};
+if ( typeof addLoadEvent != 'undefined' ) addLoadEvent(load_cmc);
+else load_cmc();
+</script>";
     }
 }

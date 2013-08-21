@@ -1,0 +1,176 @@
+﻿@using NSemble.Modules.Blog.Models
+@using NSemble.Modules.Blog.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+              
+@{
+  Layout = "_AdminLayout.cshtml";
+}
+
+@section HeadArea {
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <style>
+
+        #stats-histogram {
+            font: 10px sans-serif;
+        }
+
+        #stats-histogram .bar rect {
+            fill: steelblue;
+            shape-rendering: crispEdges;
+        }
+
+        #stats-histogram .bar text {
+            fill: #fff;
+        }
+
+        #stats-histogram .axis path, #stats-histogram .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
+        .value {
+            font-family: sans-serif;
+            font-size: 13px;
+            font-weight: bold;
+            fill: black;
+            text-anchor: middle;
+        }
+    </style>
+}
+
+<h1>Recent blog entries</h1>
+
+
+<a href="post-new">Add a new post</a>
+
+@{
+    BlogPost[] recentPosts = Model.RecentPosts;
+}
+
+<h2>Stats</h2>
+<div id="stats-histogram">
+    <script type="text/javascript">
+        // define dimensions of svg
+        var h = 250,
+            w = 800;
+        
+        var chartPadding = 60;
+        var chartBottom = h - chartPadding;
+        var chartRight = w - chartPadding; 
+      
+        // create svg element
+        var chart = d3.select('#stats-histogram')
+                      .append('svg') // parent svg element will contain the chart
+                      .attr('width', w)
+                      .attr('height', h);
+
+        var margin = { top: 10, right: 30, bottom: 30, left: 30 },
+            width = 960 - margin.left - margin.right,
+            height = 500 - margin.top - margin.bottom;
+
+        d3.json("/admin/myblog/stats", function (dataset) {
+                // init
+                var histogramData = dataset.histogram;
+                
+                var barLabels = histogramData.map(function (datum) {
+                    return datum.date;
+                });
+                var maxValue = d3.max(histogramData, function (d) { return d.views; });
+                var yScale = d3.scale
+                       .linear()
+                       .domain([0, maxValue])
+                       .range([chartBottom, chartPadding])
+                       .nice();
+                var xScale = d3.scale.ordinal()
+                             .domain(barLabels)
+                             .rangeRoundBands([chartPadding, chartRight], 0.1);
+            
+            // declare & configure the axes functions
+                var xAxis = d3.svg.axis()
+                      .scale(xScale)
+                      .orient('bottom')
+                      .tickSize(0);
+                var yAxis = d3.svg.axis()
+                                  .scale(yScale)
+                                  .orient('left');
+
+                // create bars
+            chart.selectAll('rect')  // returns empty selection
+                .data(histogramData)      // parses & counts data
+                .enter()            // binds data to placeholders
+                .append('rect')     // creates a rect svg element for every datum
+                .attr('x', function(d) { // left-to-right position of left edge of each
+                    return xScale(d.date);
+                })
+                .attr('y', function(d) {
+                    return yScale(d.views);
+                })
+                .attr('width', xScale.rangeBand()) // subtract spacing from bar width
+                .attr('height', function(d) {
+                    return chartBottom - yScale(d.views);
+                })
+                .attr('fill', 'blue')
+                .on('mouseover', function(d) {
+                    d3.select(this).attr('fill', '#08c');
+                    showValue(d);
+                })
+                .on('mouseout', function(d) {
+                    d3.select(this).attr('fill', 'blue');
+                    hideValue();
+                });
+            
+            var showValue = function (d) {
+                chart.append('text')
+                    .text(d.views)
+                    .attr({
+                        'x': xScale(d.date) + xScale.rangeBand() / 2,
+                        'y': yScale(d.views) + 15,
+                        'class': 'value'
+                    });
+            };
+            var hideValue = function () {
+                chart.select('text.value').remove();
+            };
+
+            var y_axis = chart.append('g')
+                .attr('class', 'axis')
+                .attr('transform', 'translate(' + chartPadding + ',0)');          
+            yAxis(y_axis);
+
+            chart.append('g')
+                .attr('class', 'axis xAxis')
+                .attr('transform', 'translate(0,' + chartBottom + ')')  // push to bottom
+                .call(xAxis) // passes itself (g element) into xAxis function
+                // rotate tick labels
+                .selectAll('text')
+                .style('text-anchor', 'end')
+                .style('font-weight', 'bold')
+                .attr('transform', 'rotate(-65)');
+        }
+        );
+    </script>
+</div>
+
+<h2>Recent posts</h2>
+@if (recentPosts.Length == 0)
+{
+    <p>No entries to display</p>
+
+} else
+{
+    foreach (var post in recentPosts)
+    {
+        <div><a href="@post.ToUrl((string)ViewBag.ModulePrefix)">@post.Title</a> (@post.CurrentState, published @post.PublishedAt) <a href="#">Edit</a> | <a href="#">Delete</a></div>
+    }
+}

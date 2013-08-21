@@ -1,0 +1,6 @@
+﻿@using NSemble.Core.Models
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+              
+<div>
+@NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(Model, true)
+</div>
