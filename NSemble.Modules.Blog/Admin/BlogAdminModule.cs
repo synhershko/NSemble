@@ -51,7 +51,7 @@ namespace NSemble.Modules.Blog.Admin
                 
                 var identity = (User)Context.CurrentUser;
                 post.AuthorId = identity.Id;
-
+                
                 string tags = Request.Form.TagsAsString;
                 post.Tags = new HashSet<string>();
                 if (!String.IsNullOrWhiteSpace(tags))
@@ -64,7 +64,7 @@ namespace NSemble.Modules.Blog.Admin
 
                 if ("Publish".Equals(Request.Form["SubmitAction"]))
                     post.CurrentState = BlogPost.State.Public;
-
+                
                 session.Store(post);
                 session.Store(new PostComments(), post.Id + "/comments");
                 session.SaveChanges();
