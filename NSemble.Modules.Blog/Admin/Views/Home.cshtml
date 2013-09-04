@@ -61,6 +61,8 @@
 <h2>Stats</h2>
 <div id="stats-histogram">
     <script type="text/javascript">
+        // TODO http://www.d3noob.org/2013/08/add-line-chart-in-dcjs.html
+        // TODO colors from http://bl.ocks.org/mbostock/3048166
         // define dimensions of svg
         var h = 250,
             w = 800;
@@ -71,41 +73,41 @@
       
         // create svg element
         var chart = d3.select('#stats-histogram')
-                      .append('svg') // parent svg element will contain the chart
-                      .attr('width', w)
-                      .attr('height', h);
+            .append('svg') // parent svg element will contain the chart
+            .attr('width', w)
+            .attr('height', h);
 
         var margin = { top: 10, right: 30, bottom: 30, left: 30 },
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
         d3.json("/admin/myblog/stats", function (dataset) {
-                // init
-                var histogramData = dataset.histogram;
+            // init
+            var histogramData = dataset.histogram;
                 
-                var barLabels = histogramData.map(function (datum) {
-                    return datum.date;
-                });
-                var maxValue = d3.max(histogramData, function (d) { return d.views; });
-                var yScale = d3.scale
-                       .linear()
-                       .domain([0, maxValue])
-                       .range([chartBottom, chartPadding])
-                       .nice();
-                var xScale = d3.scale.ordinal()
-                             .domain(barLabels)
-                             .rangeRoundBands([chartPadding, chartRight], 0.1);
+            var barLabels = histogramData.map(function (datum) {
+                return datum.date;
+            });
+            var maxValue = d3.max(histogramData, function (d) { return d.views; });
+            var yScale = d3.scale
+                .linear()
+                .domain([0, maxValue])
+                .range([chartBottom, chartPadding])
+                .nice();
+            var xScale = d3.scale.ordinal()
+                .domain(barLabels)
+                .rangeRoundBands([chartPadding, chartRight], 0.1);
             
             // declare & configure the axes functions
-                var xAxis = d3.svg.axis()
-                      .scale(xScale)
-                      .orient('bottom')
-                      .tickSize(0);
-                var yAxis = d3.svg.axis()
-                                  .scale(yScale)
-                                  .orient('left');
+            var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient('bottom')
+                .tickSize(0);
+            var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient('left');
 
-                // create bars
+            // create bars
             chart.selectAll('rect')  // returns empty selection
                 .data(histogramData)      // parses & counts data
                 .enter()            // binds data to placeholders
