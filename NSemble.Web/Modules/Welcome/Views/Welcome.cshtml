@@ -1,5 +1,45 @@
 ﻿<h2>Welcome!</h2>
 
-<div>
-    <p>Currently there is no Areas document defined, this is why you see this screen</p>
-</div>
+<form method="post">
+    @{ //Html.ValidationSummary(true) }
+    <fieldset>
+        <legend>Initial User</legend>
+        <div class="editor-label">
+            First Name
+        </div>
+        <div class="editor-field">
+            <input type="text" name="firstName" value="" />
+        </div>
+
+        <div class="editor-label">
+            Last Name
+        </div>
+        <div class="editor-field">
+            <input type="text" name="lastName" value="" />
+        </div>
+
+        <div class="editor-label">
+            Email
+        </div>
+        <div class="editor-field">
+            <input type="text" name="email" value="" />
+        </div>
+
+        <div class="editor-label">
+            Username
+        </div>
+        <div class="editor-field">
+            <input type="text" name="username" value="" />
+        </div>
+
+        <div class="editor-label">
+            Password
+        </div>
+        <div class="editor-field">
+            <input type="password" name="password" value="" />
+        </div>
+        <p>
+            <input type="submit" name="SubmitAction" value="Publish" />
+        </p>
+    </fieldset>
+</form>
