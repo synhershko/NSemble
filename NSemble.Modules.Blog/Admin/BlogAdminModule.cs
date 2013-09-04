@@ -22,7 +22,17 @@ namespace NSemble.Modules.Blog.Admin
                            {
                                ViewBag.ModulePrefix = AreaRoutePrefix.TrimEnd('/');
 
-                               Model.RecentPosts = session.Query<BlogPost>().Take(10).ToArray();
+                               Model.RecentPosts = session.Query<BlogPost>()
+                                          .Where(x => x.CurrentState == BlogPost.State.Public)
+                                          .OrderByDescending(x => x.PublishedAt)
+                                          .Take(10)
+                                          .ToArray();
+
+                               Model.Drafts = session.Query<BlogPost>()
+                                          .Where(x => x.CurrentState == BlogPost.State.Draft)
+                                          .OrderByDescending(x => x.PublishedAt)
+                                          .Take(10)
+                                          .ToArray();
 
                                return View["Home", Model];
                            };
