@@ -46,7 +46,8 @@ namespace NSemble.Core.Nancy
             // clear previous tokens
             foreach (var token in ravenSession.Query<ApiKeyToken>().Where(x => x.UserId == userRecord.Id))
             {
-                ravenSession.Delete(token);
+                if (DateTimeOffset.UtcNow.Subtract(TimeSpan.FromDays(14)) > token.SessionStarted)
+                    ravenSession.Delete(token);
             }
 
             // now that the user is validated, create an api key that can be used for subsequent requests

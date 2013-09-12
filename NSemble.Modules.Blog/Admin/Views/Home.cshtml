@@ -1,45 +1,54 @@
 ﻿@using NSemble.Modules.Blog.Models
 @using NSemble.Modules.Blog.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
-              
 @{
-  Layout = "_AdminLayout.cshtml";
+    Layout = "_AdminLayout.cshtml";
+    BlogPost[] recentPosts = Model.RecentPosts;
+    BlogPost[] drafts = Model.Drafts;
 }
 
 @section HeadArea {
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <style>
-
-        #stats-histogram {
+        #stats-histogram
+        {
             font: 10px sans-serif;
         }
 
-        #stats-histogram .bar rect {
-            fill: steelblue;
-            shape-rendering: crispEdges;
-        }
+            #stats-histogram .bar rect
+            {
+                fill: steelblue;
+                shape-rendering: crispEdges;
+            }
 
-        #stats-histogram .bar text {
-            fill: #fff;
-        }
+            #stats-histogram .bar text
+            {
+                fill: #fff;
+            }
 
-        #stats-histogram .axis path, #stats-histogram .axis line {
-            fill: none;
-            stroke: #000;
-            shape-rendering: crispEdges;
-        }
+            #stats-histogram .axis path, #stats-histogram .axis line
+            {
+                fill: none;
+                stroke: #000;
+                shape-rendering: crispEdges;
+            }
+
         .axis path,
-        .axis line {
+        .axis line
+        {
             fill: none;
             stroke: black;
             shape-rendering: crispEdges;
         }
 
-        .axis text {
+        .axis text
+        {
             font-family: sans-serif;
             font-size: 11px;
         }
-        .value {
+
+        .value
+        {
             font-family: sans-serif;
             font-size: 13px;
             font-weight: bold;
@@ -49,87 +58,152 @@
     </style>
 }
 
-<h1>Recent blog entries</h1>
+<div class="pageheader">
+    <form action="results.html" method="post" class="searchbar">
+        <input type="text" name="keyword" placeholder="To search type and hit enter..." />
+    </form>
+    <div class="pageicon"><span class="iconfa-hdd"></span></div>
+    <div class="pagetitle">
+        <h5>Hello World!</h5>
+        <h1>Blog Module Management</h1>
+    </div>
+</div>
+<div class="maincontent">
+    <div class="maincontentinner">
+        <div class="row-fluid">                    
+                    <div class="span6">                        
+                        <h4 class="widgettitle">Simple Chart</h4>
+                        <div class="widgetcontent">
+                            <div id="chartplace" style="height: 300px; padding: 0px; position: relative;"><canvas class="base" width="753" height="300"></canvas><canvas class="overlay" width="753" height="300" style="position: absolute; left: 0px; top: 0px;"></canvas><div class="tickLabels" style="font-size:smaller"><div class="xAxis x1Axis" style="color:#545454"><div class="tickLabel" style="position:absolute;text-align:center;left:5px;top:279px;width:57px">0.0</div><div class="tickLabel" style="position:absolute;text-align:center;left:64px;top:279px;width:57px">0.5</div><div class="tickLabel" style="position:absolute;text-align:center;left:124px;top:279px;width:57px">1.0</div><div class="tickLabel" style="position:absolute;text-align:center;left:184px;top:279px;width:57px">1.5</div><div class="tickLabel" style="position:absolute;text-align:center;left:243px;top:279px;width:57px">2.0</div><div class="tickLabel" style="position:absolute;text-align:center;left:303px;top:279px;width:57px">2.5</div><div class="tickLabel" style="position:absolute;text-align:center;left:363px;top:279px;width:57px">3.0</div><div class="tickLabel" style="position:absolute;text-align:center;left:422px;top:279px;width:57px">3.5</div><div class="tickLabel" style="position:absolute;text-align:center;left:482px;top:279px;width:57px">4.0</div><div class="tickLabel" style="position:absolute;text-align:center;left:542px;top:279px;width:57px">4.5</div><div class="tickLabel" style="position:absolute;text-align:center;left:601px;top:279px;width:57px">5.0</div><div class="tickLabel" style="position:absolute;text-align:center;left:661px;top:279px;width:57px">5.5</div><div class="tickLabel" style="position:absolute;text-align:center;left:721px;top:279px;width:57px">6.0</div></div><div class="yAxis y1Axis" style="color:#545454"><div class="tickLabel" style="position:absolute;text-align:right;top:257px;right:732px;width:21px">0.0</div><div class="tickLabel" style="position:absolute;text-align:right;top:213px;right:732px;width:21px">2.5</div><div class="tickLabel" style="position:absolute;text-align:right;top:169px;right:732px;width:21px">5.0</div><div class="tickLabel" style="position:absolute;text-align:right;top:125px;right:732px;width:21px">7.5</div><div class="tickLabel" style="position:absolute;text-align:right;top:81px;right:732px;width:21px">10.0</div><div class="tickLabel" style="position:absolute;text-align:right;top:37px;right:732px;width:21px">12.5</div><div class="tickLabel" style="position:absolute;text-align:right;top:-6px;right:732px;width:21px">15.0</div></div></div><div class="legend"><div style="position: absolute; width: 64px; height: 42px; top: 9px; left: 38px; background-color: rgb(255, 255, 255); opacity: 0.85;"> </div><table style="position:absolute;top:9px;left:38px;;font-size:smaller;color:#545454"><tbody><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid #ccc;overflow:hidden"></div></div></td><td class="legendLabel">Flash(x)</td></tr><tr><td class="legendColorBox"><div style="border:1px solid #ccc;padding:1px"><div style="width:4px;height:0;border:5px solid #666;overflow:hidden"></div></div></td><td class="legendLabel">HTML5(x)</td></tr></tbody></table></div></div>
+                        </div>
+                        
+                        <h4 class="widgettitle">WordPress Stats</h4>
+                        <div class="widgetcontent">
+                            <div id="bargraph" style="height: 300px; padding: 0px; position: relative;"><div id="stats-histogram"></div></div>
+                        </div>
+                    </div>
+                    <div class="span6">                        
+                        <h4 class="widgettitle">Recent Posts</h4>
+                        <div class="widgetcontent">
+                            <p><a href="post-new">Add a new post</a></p>
+                            @if (recentPosts.Length == 0)
+                            {
+                                <p>No entries to display</p>
 
+                            }
+                            else
+                            {
+                                foreach (var post in recentPosts)
+                                {
+                                    <div><a href="@post.ToUrl((string) ViewBag.ModulePrefix)">@post.Title</a> (@post.CurrentState,
+                                        published @post.PublishedAt) <a href="#">Edit</a> | <a href="#">Delete</a></div>
+                                }
+                            }
+                        </div>                                                                        
+                        
+                        <h4 class="widgettitle">Drafts</h4>
+                        <div class="widgetcontent">
+                            @if (drafts.Length == 0)
+                            {
+                                <p>No entries to display</p>
+                            }
+                            else
+                            {
+                                foreach (var post in drafts)
+                                {
+                                    <div><a href="@post.ToUrl((string) ViewBag.ModulePrefix)">@post.Title</a> (@post.CurrentState,
+                                        published @post.PublishedAt) <a href="#">Edit</a> | <a href="#">Delete</a></div>
+                                }
+                            }
+                        </div>
+                    </div>
+                                                            
+        </div>
+        
+        <div class="footer">
+            <div class="footer-left">
+                <span>© 2013. Shamcey Admin Template. All Rights Reserved.</span>
+            </div>
+            <div class="footer-right">
+                <span>Designed by: <a href="http://themepixels.com/">ThemePixels</a></span>
+            </div>
+        </div>
+        
+    </div>
+</div>
 
-<a href="post-new">Add a new post</a>
-
-@{
-    BlogPost[] recentPosts = Model.RecentPosts;
-}
-
-<h2>Stats</h2>
-<div id="stats-histogram">
     <script type="text/javascript">
+        // TODO http://www.d3noob.org/2013/08/add-line-chart-in-dcjs.html
+        // TODO colors from http://bl.ocks.org/mbostock/3048166
         // define dimensions of svg
         var h = 250,
             w = 800;
-        
+
         var chartPadding = 60;
         var chartBottom = h - chartPadding;
-        var chartRight = w - chartPadding; 
-      
+        var chartRight = w - chartPadding;
+
         // create svg element
         var chart = d3.select('#stats-histogram')
-                      .append('svg') // parent svg element will contain the chart
-                      .attr('width', w)
-                      .attr('height', h);
+            .append('svg') // parent svg element will contain the chart
+            .attr('width', w)
+            .attr('height', h);
 
         var margin = { top: 10, right: 30, bottom: 30, left: 30 },
             width = 960 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
         d3.json("/admin/myblog/stats", function (dataset) {
-                // init
-                var histogramData = dataset.histogram;
-                
-                var barLabels = histogramData.map(function (datum) {
-                    return datum.date;
-                });
-                var maxValue = d3.max(histogramData, function (d) { return d.views; });
-                var yScale = d3.scale
-                       .linear()
-                       .domain([0, maxValue])
-                       .range([chartBottom, chartPadding])
-                       .nice();
-                var xScale = d3.scale.ordinal()
-                             .domain(barLabels)
-                             .rangeRoundBands([chartPadding, chartRight], 0.1);
-            
-            // declare & configure the axes functions
-                var xAxis = d3.svg.axis()
-                      .scale(xScale)
-                      .orient('bottom')
-                      .tickSize(0);
-                var yAxis = d3.svg.axis()
-                                  .scale(yScale)
-                                  .orient('left');
+            // init
+            var histogramData = dataset.histogram;
 
-                // create bars
+            var barLabels = histogramData.map(function (datum) {
+                return datum.date;
+            });
+            var maxValue = d3.max(histogramData, function (d) { return d.views; });
+            var yScale = d3.scale
+                .linear()
+                .domain([0, maxValue])
+                .range([chartBottom, chartPadding])
+                .nice();
+            var xScale = d3.scale.ordinal()
+                .domain(barLabels)
+                .rangeRoundBands([chartPadding, chartRight], 0.1);
+
+            // declare & configure the axes functions
+            var xAxis = d3.svg.axis()
+                .scale(xScale)
+                .orient('bottom')
+                .tickSize(0);
+            var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient('left');
+
+            // create bars
             chart.selectAll('rect')  // returns empty selection
                 .data(histogramData)      // parses & counts data
                 .enter()            // binds data to placeholders
                 .append('rect')     // creates a rect svg element for every datum
-                .attr('x', function(d) { // left-to-right position of left edge of each
+                .attr('x', function (d) { // left-to-right position of left edge of each
                     return xScale(d.date);
                 })
-                .attr('y', function(d) {
+                .attr('y', function (d) {
                     return yScale(d.views);
                 })
                 .attr('width', xScale.rangeBand()) // subtract spacing from bar width
-                .attr('height', function(d) {
+                .attr('height', function (d) {
                     return chartBottom - yScale(d.views);
                 })
                 .attr('fill', 'blue')
-                .on('mouseover', function(d) {
+                .on('mouseover', function (d) {
                     d3.select(this).attr('fill', '#08c');
                     showValue(d);
                 })
-                .on('mouseout', function(d) {
+                .on('mouseout', function (d) {
                     d3.select(this).attr('fill', 'blue');
                     hideValue();
                 });
-            
+
             var showValue = function (d) {
                 chart.append('text')
                     .text(d.views)
@@ -145,7 +219,7 @@
 
             var y_axis = chart.append('g')
                 .attr('class', 'axis')
-                .attr('transform', 'translate(' + chartPadding + ',0)');          
+                .attr('transform', 'translate(' + chartPadding + ',0)');
             yAxis(y_axis);
 
             chart.append('g')
@@ -160,17 +234,3 @@
         }
         );
     </script>
-</div>
-
-<h2>Recent posts</h2>
-@if (recentPosts.Length == 0)
-{
-    <p>No entries to display</p>
-
-} else
-{
-    foreach (var post in recentPosts)
-    {
-        <div><a href="@post.ToUrl((string)ViewBag.ModulePrefix)">@post.Title</a> (@post.CurrentState, published @post.PublishedAt) <a href="#">Edit</a> | <a href="#">Delete</a></div>
-    }
-}

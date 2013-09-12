@@ -22,7 +22,17 @@ namespace NSemble.Modules.Blog.Admin
                            {
                                ViewBag.ModulePrefix = AreaRoutePrefix.TrimEnd('/');
 
-                               Model.RecentPosts = session.Query<BlogPost>().Take(10).ToArray();
+                               Model.RecentPosts = session.Query<BlogPost>()
+                                          .Where(x => x.CurrentState == BlogPost.State.Public)
+                                          .OrderByDescending(x => x.PublishedAt)
+                                          .Take(10)
+                                          .ToArray();
+
+                               Model.Drafts = session.Query<BlogPost>()
+                                          .Where(x => x.CurrentState == BlogPost.State.Draft)
+                                          .OrderByDescending(x => x.PublishedAt)
+                                          .Take(10)
+                                          .ToArray();
 
                                return View["Home", Model];
                            };
@@ -145,7 +155,14 @@ namespace NSemble.Modules.Blog.Admin
                                                                      default:
                                                                          ret.Add("histogram", RavenJToken.Parse(webClient.DownloadString(url)));
                                                                          break;
-                                                                 }                                                                
+                                                                 }
+
+                                                                 if ("all".Equals((string) o.type))
+                                                                 {
+                                                                     ret.Add("searchterms", RavenJToken.Parse(webClient.DownloadString(url + "&table=searchterms&days=2")));
+                                                                     ret.Add("clicks", RavenJToken.Parse(webClient.DownloadString(url + "&table=clicks&days=2")));
+                                                                     ret.Add("referrers", RavenJToken.Parse(webClient.DownloadString(url + "&table=referrers_grouped&days=2")));
+                                                                 }
                                                              }
                                                          }
 

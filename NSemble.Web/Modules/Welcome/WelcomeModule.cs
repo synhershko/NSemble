@@ -1,4 +1,6 @@
-﻿using NSemble.Core.Nancy;
+﻿using System.Collections.Generic;
+using NSemble.Core;
+using NSemble.Core.Nancy;
 using NSemble.Core.Models;
 using Nancy;
 using Nancy.ModelBinding;
@@ -15,19 +17,22 @@ namespace NSemble.Modules.Welcome
 
             Post["/"] = p =>
             {
-                User user = new User();
-                //this.BindToAndValidate<User>(user);
+                var user = this.Bind<User>("Password", "Salt", "Claims");
+                user.Claims = new List<string> {"admin"};
+                NSembleUserAuthentication.SetUserPassword(user, Request.Form.Password);
+                session.Store(user, "users/" + user.Email);
 
-                user.FirstName = Request.Form.firstName;
-                user.LastName = Request.Form.lastName;
-                user.UserName = Request.Form.username;
-                user.Email = Request.Form.email;
-                
-                session.Store(user);
-
-                NSembleUserAuthentication.SetUserPassword(user, Request.Form.password);
+                session.Store(new Dictionary<string, AreaConfigs>
+                                      {
+                                          //{"/blog", new AreaConfigs { AreaName = "MyBlog", ModuleName = "Blog" }},
+                                          //{"/content", new AreaConfigs { AreaName = "MyContent", ModuleName = "ContentPages" }},
+                                          {"/auth", new AreaConfigs { AreaName = "Auth", ModuleName = "Membership" }}
+                                      }, Constants.AreasDocumentName);
 
                 session.SaveChanges();
+
+                // Refresh the Areas configs
+                AreasResolver.Instance.LoadFromStore(session);
 
                 return Response.AsRedirect("/");
             };
