@@ -1,63 +1,75 @@
-﻿@using NSemble.Core
-@using NSemble.Core.Extensions
-@using NSemble.Core.Models
-@using NSemble.Web.Core
+﻿@using NSemble.Core.Models
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<NSemble.Modules.ContentPages.Models.ContentPage>
-              
 @{
-  Layout = "_AdminLayout.cshtml";
+    Layout = "_AdminLayout.cshtml";
 }
-
-<h2>@{ if (Model.Id == null) {<text>Add</text>} else {<text>Edit</text>}  }</h2>
 
 @section HeadArea {
     <script type="text/javascript" src="/Content/Scripts/MarkdownDeepLib.min.js"></script>
     <link rel="stylesheet" href="/Content/Scripts/mdd_styles.css">
 }
 
-<form method="post">
-    @{ //Html.ValidationSummary(true) }
- 	<fieldset>
-		<legend>ContentPage</legend>
+<div class="pageheader">
+    <form method="post" class="searchbar">
+        <input type="text" name="keyword" placeholder="To search type and hit enter..." />
+    </form>
+    <div class="pageicon"><span class="iconfa-hdd"></span></div>
+    <div class="pagetitle">
+        <h5>Content Pages</h5>
+        <h1>@{ if (Model.Id == null) {<text>Add</text>} else {<text>Edit</text>}  }</h1>
+    </div>
+</div>
+<div class="maincontent">
+    <div class="maincontentinner">
+        <div class="widgetbox box-inverse">
+            <h4 class="widgettitle">Form Bordered</h4>
+            <div class="widgetcontent nopadding">
+                <form class="stdform stdform2" method="post">
+                    <p>
+                        <label>Page title</label>
+                        <span class="field">
+                            <input type="text" name="Title" value="@Model.Title" class="input-xxlarge"></span>
+                    </p>
 
-		<div class="editor-label">
-			Title
-		</div>
-		<div class="editor-field">
-			<input type="text" name="Title" value="@Model.Title" />
-		</div>
+                    <p>
+                        <label>Content</label>
+                        <span class="field">
+                            @if (Model.ContentType == DynamicContentType.Markdown)
+                            {
+                                <div class="editor-field">
+                                    <div class="mdd_toolbar"></div>
+                                    <textarea name="Content" rows="20" cols="80" class="mdd_editor">@Model.Content</textarea>
+                                    <div class="mdd_resizer"></div>
+                                    <div class="mdd_preview"></div>
+                                </div>
 
-		@if (Model.ContentType == DynamicContentType.Markdown)
-		{
-			<div class="editor-label">
-				@Html.LabelFor(model => model.Content)
-			</div>
-			<div class="editor-field">
-			    <div class="mdd_toolbar"></div>
-				<textarea name="Content" rows="20" cols="80" class="mdd_editor">@Model.Content</textarea>
-				<div class="mdd_resizer"></div>
-				<div class="mdd_preview"></div>
-			</div>
+                                <script type="text/javascript">
+                                    $("textarea.mdd_editor").MarkdownDeep({help_location: "@Url.Content("~/Static/Scripts/mdd_help.htm")", disableTabHandling: true});
+                                </script>
+                            }
+                            else
+                            {
+                                <textarea name="Content" rows="20" cols="120">@Model.Content</textarea>
+                            }
+                        </span>
+                    </p>
 
-			<script type="text/javascript">
-                $("textarea.mdd_editor").MarkdownDeep({
-                        help_location: "@Url.Content("~/Static/Scripts/mdd_help.htm")",
-                        disableTabHandling: true
-                    });
-            </script>
-		}
-		else
-		{
-			<div class="editor-label">
-				Content
-			</div>
-			<div class="editor-field">
-			    <textarea name="Content" rows="20" cols="120">@Model.Content</textarea>
-			</div>
-		}
+                    <p class="stdformbutton">
+                        <button class="btn btn-primary">Submit Button</button>
+                        <button type="reset" class="btn">Reset Button</button>
+                    </p>
+                </form>
+            </div>
+        </div>
 
-		<p>
-			<input type="submit" value="Save" />
-		</p>
-	</fieldset>
-</form>
+        <div class="footer">
+            <div class="footer-left">
+                <span>© 2013. Shamcey Admin Template. All Rights Reserved.</span>
+            </div>
+            <div class="footer-right">
+                <span>Designed by: <a href="http://themepixels.com/">ThemePixels</a></span>
+            </div>
+        </div>
+
+    </div>
+</div>

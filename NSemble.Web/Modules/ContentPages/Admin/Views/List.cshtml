@@ -1,15 +1,91 @@
 ﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<NSemble.Modules.ContentPages.Models.ContentPage[]>
 
-<h1>List of content pages</h1>
-
-@if (Model.Length == 0)
-{
-    <p>No pages to display</p>
-
-} else
-{
-    foreach (var cp in Model)
-    {
-        <p>@cp.Title</p>
-    }
+@{
+    Layout = "_AdminLayout.cshtml";    
 }
+
+<div class="pageheader">
+    <form action="search" method="post" class="searchbar">
+        <input type="text" name="keyword" placeholder="To search type and hit enter..." />
+    </form>
+    <div class="pageicon"><span class="iconfa-hdd"></span></div>
+    <div class="pagetitle">
+        <h5>Content Pages</h5>
+        <h1>Existing Content Pages</h1>
+    </div>
+</div>
+<div class="maincontent">
+    <div class="maincontentinner">
+        <div class="row-fluid">
+            <div class="span9">
+                <h3 class="subtitle2">Public Content Pages</h3>
+                <br>
+                <table class="table discussions">
+                    <colgroup>
+                        <col class="width15">
+                        <col class="width55">
+                        <col class="width15">
+                        <col class="width15">
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Title</th>
+                            <th>Content Type</th>
+                            <th>Last Update</th>    
+                        </tr>
+                    </thead>
+                    <tbody>                        
+                        @if (Model.Length == 0)
+                        {
+                            <tr><td colspan="4" style="text-align: center">No pages to display</td></tr>
+                        } else {
+                            foreach (var cp in Model)
+                            {
+                                <tr>
+                                    <td><a class="btn" href="edit/@cp.Slug" title="Edit"><span class="iconfa-pencil"></span></a> <a class="btn" title="Delete"><span class="icon-trash"></span></a></td>
+                                    <td><a id="topic" href="#" data-placement="top" data-toggle="tooltip" data-original-title="Click me to view topic page">@cp.Title</a></td>
+                                    <td>@cp.ContentType</td>
+                                    <td>@cp.LastChanged</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>                
+            </div>
+                
+            <div class="span3">
+                <div class="alert">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <h4>Discussion Rules</h4>
+                    <div class="divider15"></div>
+                    <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                </div>
+                    
+                <br>
+                            
+                <h3 class="subtitle2">Categories</h3>
+                <ul class="sidebarlist">
+                    <li><i class="iconfa-angle-right"></i> <a href="">Perspiciatis Unde <span>21</span></a></li>
+                    <li><i class="iconfa-angle-right"></i> <a href="">Accusantium <span>5</span></a></li>
+                    <li><i class="iconfa-angle-right"></i> <a href="">Laudantium, <span>1</span></a></li>
+                    <li><i class="iconfa-angle-right"></i> <a href="">Quibusdam <span>3</span></a></li>
+                    <li><i class="iconfa-angle-right"></i> <a href="">Natuserror <span>11</span></a></li>
+                    <li><i class="iconfa-angle-right"></i> <a href="">Doloremque <span>20</span></a></li>
+                </ul>
+                               
+            </div><!--span3-->
+                
+        </div>
+        
+        <div class="footer">
+            <div class="footer-left">
+                <span>© 2013. Shamcey Admin Template. All Rights Reserved.</span>
+            </div>
+            <div class="footer-right">
+                <span>Designed by: <a href="http://themepixels.com/">ThemePixels</a></span>
+            </div>
+        </div>
+        
+    </div>
+</div>

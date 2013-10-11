@@ -53,9 +53,6 @@ namespace NSemble.Modules.ContentPages.Admin
             Post["/edit/{slug}"] = p =>
                                       {
                                           var input = this.Bind<ContentPage>();
-                                          if (input.Id != (string)p.slug)
-                                              return "<h1>Error</h1><p>Slugs mismatch</p>";
-
                                           var cp = session.Load<ContentPage>(DocumentPrefix + ContentPage.FullContentPageId((string)p.slug));
                                           if (cp == null)
                                               return 404;
@@ -64,6 +61,8 @@ namespace NSemble.Modules.ContentPages.Admin
                                           cp.ContentType = input.ContentType;
                                           cp.Title = input.Title;
                                           cp.LastChanged = DateTimeOffset.Now;
+                                          
+                                          session.SaveChanges();
 
                                           return Response.AsRedirect(string.Concat(AreaRoutePrefix.TrimEnd('/'), "/", cp.Slug));
                                       };
