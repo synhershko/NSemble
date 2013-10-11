@@ -1,0 +1,11 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<NSemble.Core.Models.Widget[]>
+@{
+  Layout = "_AdminLayout.cshtml";
+}
+
+<h1>Widgets</h1>
+
+@foreach (var widget in Model)
+{
+    <p>@widget.Name</p>
+}

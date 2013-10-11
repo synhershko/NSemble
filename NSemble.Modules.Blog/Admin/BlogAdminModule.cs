@@ -168,6 +168,25 @@ namespace NSemble.Modules.Blog.Admin
 
                                                          return Response.AsText(ret.ToString(), "text/json");
                                                      };
+
+            Get[@"/config"] = o =>
+                                  {
+                                      using (session.Advanced.DocumentStore.DisableAggressiveCaching())
+                                      {
+                                          var config = session.Load<BlogConfig>("NSemble/Configs/" + AreaConfigs.AreaName);
+                                          return View["Config", config];
+                                      }
+                                  };
+
+            Get[@"/config/widgets"] = o =>
+                                          {
+                                              using (session.Advanced.DocumentStore.DisableAggressiveCaching())
+                                              {
+                                                  var config =
+                                                      session.Load<BlogConfig>("NSemble/Configs/" + AreaConfigs.AreaName);
+                                                  return View["ConfigWidgets", config.Widgets.ToArray()];
+                                              }
+                                          };
         }
     }
 }

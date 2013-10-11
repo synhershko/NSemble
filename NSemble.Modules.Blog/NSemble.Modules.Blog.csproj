@@ -84,6 +84,8 @@
     <EmbeddedResource Include="Admin\Views\List.cshtml" />
     <EmbeddedResource Include="Admin\Views\Edit.cshtml" />
     <EmbeddedResource Include="Admin\Views\Home.cshtml" />
+    <EmbeddedResource Include="Admin\Views\Config.cshtml" />
+    <EmbeddedResource Include="Admin\Views\ConfigWidgets.cshtml" />
     <None Include="app.config" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Views\ReadBlogPost.cshtml" />
