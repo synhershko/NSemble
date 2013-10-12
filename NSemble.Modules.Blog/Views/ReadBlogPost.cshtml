@@ -27,13 +27,18 @@
     <p><strong>Comments</strong></p>
     @if (Model.Comments != null)
     {
-        foreach (var comment in Model.Comments.Comments)
+        foreach (PostComments.Comment comment in Model.Comments.Comments)
         {
-            <div>
-                @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(comment, 48)
-
-                @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(comment.Content, DynamicContentType.Markdown, false)
-            </div>
+            <div class="row-fluid">
+                <div class="span1">
+                    @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(comment, 48)
+                </div>
+                
+                <div class="span11">
+                    <small>Posted by @comment.Author on @comment.CreatedAt.Html5DateTimeTag()</small>
+                    @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(comment.Content, DynamicContentType.Markdown, false)
+                </div>
+            </div><br/>
         }
     }        
         
