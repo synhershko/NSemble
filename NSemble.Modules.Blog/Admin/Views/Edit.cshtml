@@ -39,12 +39,9 @@
 				<div class="mdd_preview"></div>
 			</div>
 
-			<script type="text/javascript">
-                $("textarea.mdd_editor").MarkdownDeep({
-                        help_location: "@Url.Content("~/Static/Scripts/mdd_help.htm")",
-                        disableTabHandling: true
-                    });
-            </script>
+		    <script type="text/javascript">
+		        jQuery(function($) { $("textarea.mdd_editor").MarkdownDeep({ help_location: "@Url.Content("~/Content/Scripts/mdd_help.htm")", disableTabHandling: true }) });
+    		</script>
 		}
 		else
 		{

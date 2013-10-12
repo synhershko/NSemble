@@ -44,7 +44,7 @@
                                 </div>
 
                                 <script type="text/javascript">
-                                    $("textarea.mdd_editor").MarkdownDeep({help_location: "@Url.Content("~/Static/Scripts/mdd_help.htm")", disableTabHandling: true});
+                                    jQuery(function($) { $("textarea.mdd_editor").MarkdownDeep({ help_location: "@Url.Content("~/Content/Scripts/mdd_help.htm")", disableTabHandling: true }) });
                                 </script>
                             }
                             else
