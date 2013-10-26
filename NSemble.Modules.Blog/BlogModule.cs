@@ -95,28 +95,28 @@ namespace NSemble.Modules.Blog
             // Home
             Get["/"] = o =>
                            {
-                               ((PageModel)Model.Page).Title = "Blog roll";
+                               ((PageModel)Model.Page).Title = blogConfig.BlogDescription;
                                Model.ListTitle = string.Empty;
 
-                               return GetPosts(session);
+                               return View["BlogHome", GetPosts(session)];
                            };
             Get[@"/page/(?<page>\d+)"] = o =>
                            {
-                               ((PageModel)Model.Page).Title = "Blog roll";
+                               ((PageModel)Model.Page).Title = blogConfig.BlogDescription;
                                Model.ListTitle = string.Empty;
 
-                               return GetPosts(session, null, null, null, o.page ?? 1);
+                               return View["ListBlogPosts", GetPosts(session, null, null, null, o.page ?? 1)];
                            };
 
             // Archive
-            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})"] = p => GetPosts(session, p.year, null, null, null);
-            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/page/(?<page>\d+)"] = p => GetPosts(session, p.year, null, null, p.page);
-            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])"] = p => GetPosts(session, p.year, p.month, null, null);
-            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/page/(?<page>\d+)"] = p => GetPosts(session, p.year, p.month, null, p.page);
+            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})"] = p => View["ListBlogPosts", GetPosts(session, p.year, null, null, null)];
+            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/page/(?<page>\d+)"] = p => View["ListBlogPosts", GetPosts(session, p.year, null, null, p.page)];
+            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])"] = p => View["ListBlogPosts", GetPosts(session, p.year, p.month, null, null)];
+            Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/page/(?<page>\d+)"] = p => View["ListBlogPosts", GetPosts(session, p.year, p.month, null, p.page)];
 
             // By tag
-            Get[@"/tagged/{tagname}"] = p => GetPosts(session, null, null, new[] { (string)p.tagname });
-            Get[@"/tagged/{tagname}/page/{page?1}"] = p => GetPosts(session, null, null, new[] { (string)p.tagname }, (int)p.page);
+            Get[@"/tagged/{tagname}"] = p => View["ListBlogPosts", GetPosts(session, null, null, new[] { (string)p.tagname })];
+            Get[@"/tagged/{tagname}/page/{page?1}"] = p => View["ListBlogPosts", GetPosts(session, null, null, new[] { (string)p.tagname }, (int)p.page)];
 
             // RSS feed
             Get[@"/rss"] = p =>
@@ -147,14 +147,12 @@ namespace NSemble.Modules.Blog
                                    string responseETagHeader;
                                    if (CheckEtag(stats, out responseETagHeader))
                                        return HttpStatusCode.NotModified;
-
-                                   
-
+                                  
                                    return new RssResponse(blogPosts, new Uri(Context.Request.Url, AreaRoutePrefix), blogConfig);
                                };
         }
 
-        private object GetPosts(IDocumentSession session, int? year = null, int? month = null, IEnumerable<string> tags = null, int? page = null)
+        private dynamic GetPosts(IDocumentSession session, int? year = null, int? month = null, IEnumerable<string> tags = null, int? page = null)
         {
             StringBuilder pageHeader = null;
 
@@ -204,7 +202,7 @@ namespace NSemble.Modules.Blog
                 ((PageModel)Model.Page).Title = Model.ListTitle = pageHeader.ToString();
             }
 
-            return View["ListBlogPosts", Model];
+            return Model;
         }
 
         private static BlogPost GetBlogPost(int id, string key, IDocumentSession session)

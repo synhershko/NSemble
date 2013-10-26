@@ -93,6 +93,7 @@
     <EmbeddedResource Include="Views\_BlogLayout.cshtml" />
     <EmbeddedResource Include="Views\ListBlogPostsWidget.cshtml" />
     <EmbeddedResource Include="Views\TagCloudWidget.cshtml" />
+    <EmbeddedResource Include="Views\BlogHome.cshtml" />
     <None Include="web.config" />
   </ItemGroup>
   <ItemGroup>
