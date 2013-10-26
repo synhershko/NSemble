@@ -1,4 +1,5 @@
 ﻿using System;
+using NSemble.Core.Models;
 using NSemble.Core.Nancy;
 using NSemble.Modules.ContentPages.Models;
 using Raven.Client;
@@ -23,6 +24,7 @@ namespace NSemble.Modules.ContentPages
                                          return "<p>The requested content page was not found</p>"; // we will return a 404 instead once the system stabilizes...
 
                                      Model.ContentPage = cp;
+                                     ((PageModel) Model.Page).Title = cp.Title;
 
                                      return View["Read", Model];
                                  };
