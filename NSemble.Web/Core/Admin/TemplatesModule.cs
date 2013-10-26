@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NSemble.Core;
 using NSemble.Core.Models;
 using Nancy;
@@ -24,7 +25,7 @@ namespace NSemble.Web.Core.Admin
             Get[@"/edit/{viewName*}"] = p =>
                                             {
                                                 var viewName = (string) p.viewName;
-                                                if (!viewName.StartsWith(Constants.RavenViewDocumentPrefix))
+                                                if (!viewName.StartsWith(Constants.RavenViewDocumentPrefix, StringComparison.InvariantCultureIgnoreCase))
                                                     viewName = Constants.RavenViewDocumentPrefix + viewName;
                                                 var template = session.Load<ViewTemplate>(viewName);
 
@@ -52,10 +53,10 @@ namespace NSemble.Web.Core.Admin
                                                        var template = this.Bind<ViewTemplate>();
                                                        
                                                        var viewName = (string) p.viewName;
-                                                       if (!viewName.StartsWith(Constants.RavenViewDocumentPrefix))
+                                                       if (!viewName.StartsWith(Constants.RavenViewDocumentPrefix, StringComparison.InvariantCultureIgnoreCase))
                                                            viewName = Constants.RavenViewDocumentPrefix + viewName;
 
-                                                       session.Store(template, viewName);
+                                                       session.Store(template, string.Concat(Constants.RavenViewDocumentPrefix, template.Location, "/", template.Name, ".", template.Extension));
                                                        session.SaveChanges();
 
                                                        return "Success";
