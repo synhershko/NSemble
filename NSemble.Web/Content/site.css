@@ -1,0 +1,164 @@
+﻿/* ===========================
+   ======= Header style ====== 
+   =========================== */
+   
+.mainHeader {
+background: #4d505a; /* Old browsers */
+background: -moz-linear-gradient(top,  #4d505a 88%, #40424a 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(88%,#4d505a), color-stop(100%,#40424a)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #4d505a 88%,#40424a 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #4d505a 88%,#40424a 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #4d505a 88%,#40424a 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #4d505a 88%,#40424a 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4d505a', endColorstr='#40424a',GradientType=0 ); /* IE6-9 */
+margin: 0 0 2% 0;
+	padding: 0;
+}
+
+.inside {
+	width: 70%;	
+	margin: 0 auto;
+}
+
+.insideHdLeft, .insideHdRight {
+display: inline-block;
+
+}
+
+.insideHdLeft {
+	width: 72%;
+	margin: 0;
+	padding: 0;
+}
+
+.insideHdRight {
+	margin: 0 0 0 3%;
+	width: 22%;
+	padding: 0 2% 0 0%;
+}
+
+.SearchForm {
+	background-color: #000000;
+	padding: 2px 0 0 2px;
+	position: relative;
+	
+}
+
+input.searchBox, input.search  {
+  display: inline-block;
+}
+input.searchBox {
+	color: #999999;
+	background-color: #000000;
+	border: none;
+	padding: 6px 0 6px 0;
+	width: 90%;
+}
+
+input.search {
+
+  background: transparent url(/content/images/sprites.png) no-repeat top left;
+  background-position: 0 -216px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  width: 37px;
+  height: 30px;
+  overflow: hidden; /* only show what is within the desired dimensions */
+  color : transparent;
+  font-size : 0;
+  cursor: pointer; /* hand-shaped cursor */
+  cursor: hand; /* for IE 5.x */
+  	position: absolute;
+	top: 0px; right:-13px
+}
+
+input.search:hover {
+	background : url(/content/images/sprites.png) no-repeat center center;
+	background-position: 0 -296px; width: 37px; height: 30px;
+}
+
+.LogoHd, .mainHeader nav, .rssnav {
+	display: inline-block;
+}
+
+.LogoHd{
+	width: 20%;	
+  padding: 2px 0 0 0;
+}
+
+.LogoHd h1{
+	font-size: 160%;	
+  margin: 0;
+  padding: 0;
+}
+
+.LogoHd h1 a, .LogoHd h1 a:visited{
+	color: #FFFFFF;	
+}
+
+.LogoHd h1 a, .LogoHd h1 a:hover{
+	color: #FA5252;	
+}
+   
+.mainHeader nav {
+	font-size: 80%;
+	width: 58%;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+.mainHeader nav ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+
+}
+
+.mainHeader nav ul li{
+	display: inline;
+	padding: 0;
+	font-size: 110%;	
+}
+
+.mainHeader nav a:link, .mainHeader nav a:visited {
+	color: #fff;
+	display: inline-block;
+	padding: 0 10px;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.mainHeader nav a:hover, .mainHeader nav a:active,
+.mainHeader nav .active a:link, .mainHeader nav .active a:visited {
+
+	color: #FA5252;	
+	text-shadow: none !important;
+}
+
+.rssnav {
+	width: 100%;
+	text-align: right;	
+}
+.rssnav ul{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;	
+}
+.rssnav ul li{
+	font-weight: bold;	
+}
+.rssnav ul li a, .rssnav ul li a:visited{
+	color: #FFFFFF;
+		padding: 0 0 0 20px;
+	background: url(/content/images/sprites.png) no-repeat top left;
+	background-position: 0 -376px; width: 15px; height: 15px
+	padding: 0 0 0 10px;
+}
+
+.rssnav ul li a:hover{
+	color: #FA5252;	
+	background: url(/content/images/sprites.png) no-repeat top left;
+	background-position: 0 -441px; width: 15px; height: 15px
+}

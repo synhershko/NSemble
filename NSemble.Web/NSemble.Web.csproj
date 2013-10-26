@@ -99,6 +99,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\images\sprites.png" />
     <Content Include="Content\login\css\base.css" />
     <Content Include="Content\login\css\layout.css" />
     <Content Include="Content\login\css\skeleton.css" />
@@ -386,6 +387,7 @@
     <Content Include="Content\shamcey\prettify\lang-yaml.js" />
     <Content Include="Content\shamcey\prettify\prettify.css" />
     <Content Include="Content\shamcey\prettify\prettify.js" />
+    <Content Include="Content\site.css" />
     <Content Include="Views\_AdminLayout.cshtml" />
     <Content Include="Views\Templates\List.cshtml" />
     <Content Include="Views\Templates\Edit.cshtml" />
