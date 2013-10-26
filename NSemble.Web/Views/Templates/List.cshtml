@@ -14,6 +14,6 @@
 {
     foreach (var template in Model)
     {
-        <p><a href="/admin/templates/edit/@template.Name.@template.Extension"></a>@template.Location / @template.Name . @template.Extension</p>
+        <p><a href="/admin/templates/edit/@template.Id">@template.Location/@template.Name.@template.Extension</a></p>
     }
 }

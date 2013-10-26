@@ -2,6 +2,7 @@
 {
 	public class ViewTemplate
 	{
+	    public string Id { get; set; }
 		public string Extension { get; set; }
 
 		public string Location { get; set; }
