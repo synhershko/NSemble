@@ -14,6 +14,7 @@ namespace NSemble.Core.Nancy
         {
             public string UserId { get; set; }
             public DateTimeOffset SessionStarted { get; set; }
+            public DateTimeOffset LastActivity { get; set; }
         }
 
         private const int SaltSize = 5;
@@ -25,8 +26,23 @@ namespace NSemble.Core.Nancy
 
         public static IUserIdentity GetUserFromApiKey(IDocumentSession ravenSession, string apiKey)
         {
+            if (apiKey == null)
+                return null;
+
             var activeKey = ravenSession.Include<ApiKeyToken>(x => x.UserId).Load(GetApiKeyDocumentId(apiKey));
-            return activeKey == null ? null : ravenSession.Load<User>(activeKey.UserId);
+            if (activeKey == null)
+                return null;
+
+            if (DateTimeOffset.UtcNow.Subtract(TimeSpan.FromDays(7)) > activeKey.LastActivity)
+            {
+                ravenSession.Delete(activeKey);
+                ravenSession.SaveChanges();
+                return null;
+            }
+
+            activeKey.LastActivity = DateTimeOffset.Now;
+            ravenSession.SaveChanges();
+            return ravenSession.Load<User>(activeKey.UserId);
         }
 
         public static string ValidateUser(IDocumentSession ravenSession, string username, string password)
@@ -43,16 +59,16 @@ namespace NSemble.Core.Nancy
             if (!CompareByteArrays(hashedPassword, userRecord.Password))
                 return null;
 
-            // clear previous tokens
+            // cleanup expired or unusesd tokens
             foreach (var token in ravenSession.Query<ApiKeyToken>().Where(x => x.UserId == userRecord.Id))
             {
-                if (DateTimeOffset.UtcNow.Subtract(TimeSpan.FromDays(14)) > token.SessionStarted)
+                if (DateTimeOffset.UtcNow.Subtract(TimeSpan.FromDays(7)) > token.LastActivity)
                     ravenSession.Delete(token);
             }
 
             // now that the user is validated, create an api key that can be used for subsequent requests
             var apiKey = Guid.NewGuid().ToString();
-            ravenSession.Store(new ApiKeyToken { UserId = userRecord.Id, SessionStarted = DateTimeOffset.UtcNow }, GetApiKeyDocumentId(apiKey));
+            ravenSession.Store(new ApiKeyToken { UserId = userRecord.Id, SessionStarted = DateTimeOffset.UtcNow, LastActivity = DateTimeOffset.UtcNow }, GetApiKeyDocumentId(apiKey));
             ravenSession.SaveChanges();
 
             return apiKey;
