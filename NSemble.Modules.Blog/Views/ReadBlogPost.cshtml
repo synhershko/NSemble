@@ -1,4 +1,5 @@
-﻿@using NSemble.Modules.Blog.Helpers
+﻿@using System.Linq
+@using NSemble.Modules.Blog.Helpers
 @using NSemble.Modules.Blog.Models
 @using NSemble.Core.Models
 @using NSemble.Core.Extensions
@@ -38,7 +39,29 @@
                     <small>Posted by @comment.Author on @comment.CreatedAt.Html5DateTimeTag()</small>
                     @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(comment.Content, DynamicContentType.Markdown, false)
                 </div>
-            </div><br/>
+            </div>
+
+            if (comment.Replies.Any())
+            {
+                <ul class="comment-replies">
+                    @foreach (var r in comment.Replies)
+                    {
+                        <li class="row-fluid">
+                            <div class="span1 comment-replies-spacer"></div>
+                            <div class="span1 comment-replies-gravatar">
+                                @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(r, 48)
+                            </div>
+
+                            <div class="span10">
+                                <small>Posted by @r.Author on @r.CreatedAt.Html5DateTimeTag()</small>
+                                @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(r.Content, DynamicContentType.Markdown, false)
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+
+            <br/>
         }
     }        
         

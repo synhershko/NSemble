@@ -6,11 +6,30 @@
 
 @section HeadArea {
     <link id="AtomLink" title="RSS" type="application/rss+xml" rel="alternate" href="@ViewBag.AreaRoutePrefix/rss">
+    
+    <style type="text/css">
+        .comment-replies
+        {
+            list-style: none;
+            border-left: 1px solid #ccc;
+            padding-top: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        ul.comment-replies .row-fluid > div.comment-replies-spacer
+        {
+            border-bottom: 1px solid #ccc;
+            margin-right: 0;
+            min-height: 26px;
+        }
+        ul.comment-replies .row-fluid > div.comment-replies-gravatar {
+            margin-left: 2px;
+        }
+    </style>
 }
 
 <div class="row">
     <div class="span12">
-        <h2>My blog</h2>
+        <h2></h2>
     </div>
 </div>
 
