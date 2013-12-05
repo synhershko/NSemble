@@ -9,21 +9,18 @@
     BlogPost post = Model.BlogPost;
 }
 
-<div>
+<article>
     <h3>@Model.BlogPost.Title</h3>
     <small>Posted @HtmlExtensions.Html5DateTimeTag(post.PublishedAt)</small>
-</div>
 
-<hr/>
+    <hr />
 
-<div>
     @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(Model.BlogPost)
-    
-    <p><small>Tagged @UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags)</small></p>
-</div>
+</article>
+<p><small>Tagged @UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags)</small></p>
 
 <hr/>
-<div>
+<section>
     <a name="comments"></a>
     <p><strong>Comments</strong></p>
     @if (Model.Comments != null)
@@ -38,6 +35,8 @@
                 <div class="span11">
                     <small>Posted by @comment.Author on @comment.CreatedAt.Html5DateTimeTag()</small>
                     @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(comment.Content, DynamicContentType.Markdown, false)
+                    
+                    <br/>
                 </div>
             </div>
 
@@ -63,7 +62,9 @@
 
             <br/>
         }
-    }        
+        
+        <hr/>
+    }
         
     @{
         var postUrl = UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix);
@@ -107,4 +108,4 @@
             </p>
         </fieldset>
     </form>
-</div>
+</section>

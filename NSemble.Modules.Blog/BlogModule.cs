@@ -184,7 +184,7 @@ namespace NSemble.Modules.Blog
                 .Statistics(out stats)
                 .Skip(((page ?? 1) - 1) * PageSize).Take(PageSize)
                 .ToList();
-
+            
             ViewBag.AreaRoutePrefix = AreaRoutePrefix;
             Model.Year = year;
             Model.Month = month;
