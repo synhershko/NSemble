@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Mail;
 using Raven.Abstractions.Extensions;
 
@@ -81,6 +82,7 @@ namespace NSemble.Core.Tasks
 
             using (var smtpClient = new SmtpClient())
             {
+                smtpClient.Timeout = 20000;
                 smtpClient.Send(mailMessage);
             }
 
