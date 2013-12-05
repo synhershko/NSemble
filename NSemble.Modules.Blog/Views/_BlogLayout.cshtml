@@ -12,33 +12,30 @@
         {
             list-style: none;
             border-left: 1px solid #ccc;
-            padding-top: 5px;
+            padding-top: 10px;
             border-bottom: 1px solid #ccc;
         }
-        ul.comment-replies .row-fluid > div.comment-replies-spacer
+        ul.comment-replies .row {
+            margin-bottom: 5px;
+        }
+        ul.comment-replies .row > div.comment-replies-spacer
         {
             border-bottom: 1px solid #ccc;
             margin-right: 0;
             min-height: 26px;
+            padding-left: 0;padding-right: 0;
         }
-        ul.comment-replies .row-fluid > div.comment-replies-gravatar {
+        ul.comment-replies .row > div.comment-replies-gravatar {
             margin-left: 2px;
         }
     </style>
 }
 
 <div class="row">
-    <div class="span12">
-        <h2></h2>
-    </div>
-</div>
-
-
-<div class="row">
-    <main class="span8">
+    <main class="col-md-8">
         @RenderBody()
     </main>
-    <aside class="span4">
+    <aside class="col-md-4">
         @foreach (var widget in Model.Widgets)
         {
             // TODO: Check RegionName

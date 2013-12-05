@@ -10,8 +10,8 @@
 }
 
 <article>
-    <h3>@Model.BlogPost.Title</h3>
     <small>Posted @HtmlExtensions.Html5DateTimeTag(post.PublishedAt)</small>
+    <h2>@Model.BlogPost.Title</h2>
 
     <hr />
 
@@ -27,16 +27,14 @@
     {
         foreach (PostComments.Comment comment in Model.Comments.Comments)
         {
-            <div class="row-fluid">
-                <div class="span1">
+            <div class="row">
+                <div class="col-md-1">
                     @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(comment, 48)
                 </div>
                 
-                <div class="span11">
+                <div class="col-md-11">
                     <small>Posted by @comment.Author on @comment.CreatedAt.Html5DateTimeTag()</small>
                     @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(comment.Content, DynamicContentType.Markdown, false)
-                    
-                    <br/>
                 </div>
             </div>
 
@@ -45,15 +43,16 @@
                 <ul class="comment-replies">
                     @foreach (var r in comment.Replies)
                     {
-                        <li class="row-fluid">
-                            <div class="span1 comment-replies-spacer"></div>
-                            <div class="span1 comment-replies-gravatar">
-                                @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(r, 48)
-                            </div>
+                        <li>
+                            <div class="row">
+                                <div class="col-md-1 col-md-offset-1 comment-replies-gravatar">
+                                    @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(r, 48)
+                                </div>
 
-                            <div class="span10">
-                                <small>Posted by @r.Author on @r.CreatedAt.Html5DateTimeTag()</small>
-                                @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(r.Content, DynamicContentType.Markdown, false)
+                                <div class="col-md-10">
+                                    <small>Reply posted by @r.Author on @r.CreatedAt.Html5DateTimeTag()</small>
+                                    @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(r.Content, DynamicContentType.Markdown, false)
+                                </div>
                             </div>
                         </li>
                     }

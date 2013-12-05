@@ -11,16 +11,14 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <link href="/Content/bootstrap.min.css" rel="stylesheet">
-    <link href="/Content/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
 
     @RenderSection("HeadArea", required: false)
 </head>
 <body>
     <div class="container">
-        
-        <h1>Website header</h1>
-
         @RenderBody()
 
         <hr>
