@@ -63,7 +63,6 @@ namespace NSemble.Modules.Blog.Tasks
             var post = DocumentSession.Include<BlogPost>(blogPost => blogPost.AuthorId).Load(postId);
             var postAuthor = DocumentSession.Load<User>(post.AuthorId);
             var author = DocumentSession.Load<User>(commentInput.Author);
-            DocumentSession.Advanced.MarkReadOnly(post);
             if (postAuthor != null) DocumentSession.Advanced.MarkReadOnly(postAuthor);
             if (author != null) DocumentSession.Advanced.MarkReadOnly(author);
 
@@ -95,7 +94,7 @@ namespace NSemble.Modules.Blog.Tasks
                     comment.Id = comments.GenerateNewCommentId();
                     comments.Comments.Add(comment);
                 }
-                post.CommentsCount++;
+                post.CommentsCount = comments.CommentsCount;
             }
 
             //			if (requestValues.IsAuthenticated == false && comment.IsSpam)
