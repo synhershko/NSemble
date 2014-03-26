@@ -75,8 +75,7 @@ namespace NSemble.Modules.Blog.Admin
                 if ("Publish".Equals(Request.Form["SubmitAction"]))
                     post.CurrentState = BlogPost.State.Public;
                 
-                session.Store(post);
-                session.Store(new PostComments(), post.Id + "/comments");
+                session.Store(post, "BlogPosts/");
                 session.SaveChanges();
 
                 return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')));

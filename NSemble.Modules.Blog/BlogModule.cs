@@ -58,7 +58,7 @@ namespace NSemble.Modules.Blog
                                          ((PageModel)Model.Page).Title = post.Title;
                                          ViewBag.AreaRoutePrefix = AreaRoutePrefix;
                                          Model.BlogPost = post;
-                                         Model.Comments = session.Load<PostComments>(post.Id + "/comments");
+                                         Model.Comments = session.Load<PostComments>(post.Id + "/comments") ?? new PostComments();
 
                                          return View["ReadBlogPost", Model];
                                      };

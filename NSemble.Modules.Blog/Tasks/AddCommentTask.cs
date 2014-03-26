@@ -68,7 +68,11 @@ namespace NSemble.Modules.Blog.Tasks
             if (author != null) DocumentSession.Advanced.MarkReadOnly(author);
 
             var comments = DocumentSession.Load<PostComments>(postId + "/comments");
-            // TODO if (comments == null)
+            if (comments == null)
+            {
+                comments = new PostComments();
+                DocumentSession.Store(comments, post.Id + "/comments");
+            }
 
             if (isSpam)
             {
