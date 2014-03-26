@@ -31,7 +31,7 @@ namespace NSemble.Modules.Blog
             BlogConfig blogConfig;
             using (session.Advanced.DocumentStore.AggressivelyCacheFor(TimeSpan.FromMinutes(5)))
             {
-                blogConfig = session.Load<BlogConfig>("NSemble/Configs/MyBlog");
+                blogConfig = session.Load<BlogConfig>("NSemble/Configs/MyBlog") ?? new BlogConfig { BlogTitle = "My Blog" };
             }
             LoadWidgets(session, blogConfig);
 
@@ -231,7 +231,7 @@ namespace NSemble.Modules.Blog
             var widgets = new List<WidgetViewModel>();
 
             // TODO: Use AreaConfigs, Constants, admin create
-            if (blogConfig != null)
+            if (blogConfig != null && blogConfig.Widgets != null)
             {
                 widgets.AddRange(blogConfig.Widgets.Select(widget => new WidgetViewModel(session, widget)));
             }

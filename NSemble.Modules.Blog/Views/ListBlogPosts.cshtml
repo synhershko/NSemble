@@ -8,28 +8,35 @@
 
 <h3>@Model.ListTitle</h3>
 
-@foreach (var post in Model.BlogPosts)
+@if (Model.BlogPosts.Count > 0)
 {
-    var postUrl = UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix);
-    <h3><a href="@postUrl">@post.Title</a></h3>
-    
-    <div>
-        @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
+    foreach (var post in Model.BlogPosts)
+    {
+        var postUrl = UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix);
+        <h3><a href="@postUrl">@post.Title</a></h3>
 
-        <small>Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags) | <a href="@postUrl#comments">Comments (@post.CommentsCount)</a></small>
-    </div>
-    <hr/>
+        <div>
+            @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
+
+            <small>Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @UrlHelpers.TagLinks((string) ViewBag.AreaRoutePrefix, post.Tags) | <a href="@postUrl#comments">Comments (@post.CommentsCount)</a></small>
+        </div>
+        <hr/>
+    }
+
+    <p style="text-align: center">Showing @Model.BlogPosts.Count posts out of @Model.TotalBlogPosts total, page @Model.CurrentPage</p>
+    <p style="text-align: center">
+        @if (Model.CurrentPage > 1)
+        {
+            <a href="@UrlHelpers.BlogUrl((string) ViewBag.AreaRoutePrefix, (int?) Model.Year, (int?) Model.Month, null, (int) Model.CurrentPage - 1)">Previous page</a>
+        }
+
+        @if ((Model.CurrentPage*Model.PageSize) < Model.TotalBlogPosts)
+        {
+            <a href="@UrlHelpers.BlogUrl((string) ViewBag.AreaRoutePrefix, (int?) Model.Year, (int?) Model.Month, null, (int) Model.CurrentPage + 1)">Next page</a>
+        } 
+    </p>
 }
-
-<p style="text-align: center">Showing @Model.BlogPosts.Count posts out of @Model.TotalBlogPosts total, page @Model.CurrentPage</p>
-<p style="text-align: center">
-   @if (Model.CurrentPage > 1)
-   {
-       <a href="@UrlHelpers.BlogUrl((string)ViewBag.AreaRoutePrefix, (int?)Model.Year, (int?)Model.Month, null, (int) Model.CurrentPage - 1)">Previous page</a>
-   }
-
-   @if ((Model.CurrentPage * Model.PageSize) < Model.TotalBlogPosts)
-   {
-       <a href="@UrlHelpers.BlogUrl((string)ViewBag.AreaRoutePrefix, (int?)Model.Year, (int?)Model.Month, null, (int) Model.CurrentPage + 1)">Next page</a>
-   } 
-</p>
+else
+{
+    <div class="alert alert-warning">No posts found!</div>
+}
