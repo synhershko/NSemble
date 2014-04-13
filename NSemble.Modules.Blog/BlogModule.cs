@@ -44,6 +44,7 @@ namespace NSemble.Modules.Blog
                                          }
                                          catch (ArgumentException e)
                                          {
+                                             Context.Response.StatusCode = HttpStatusCode.NotFound;
                                              return e.Message;
                                          }
 
@@ -76,6 +77,7 @@ namespace NSemble.Modules.Blog
                                                           }
                                                           catch (ArgumentException e)
                                                           {
+                                                              Context.Response.StatusCode = HttpStatusCode.NotFound;
                                                               return e.Message;
                                                           }
 
