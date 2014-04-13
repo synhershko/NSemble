@@ -41,6 +41,7 @@ namespace NSemble.Modules.Blog
                                          try
                                          {
                                              post = GetBlogPost((int)p.id, Request.Query.key, session);
+                                             session.Advanced.MarkReadOnly(post);
                                          }
                                          catch (ArgumentException e)
                                          {
@@ -55,6 +56,12 @@ namespace NSemble.Modules.Blog
 
                                          if (!post.Slug.Equals(p.slug))
                                              return Response.AsRedirect(post.ToUrl(AreaRoutePrefix.TrimEnd('/')), RedirectResponse.RedirectType.Permanent);
+
+                                         // Disable commenting if time has come to close comments
+                                         if (post.AllowComments && post.PublishedAt.AddDays(blogConfig.KeepCommentsOpenFor.Days) > DateTimeOffset.UtcNow)
+                                         {
+                                             post.AllowComments = false;
+                                         }
 
                                          ((PageModel)Model.Page).Title = post.Title;
                                          ViewBag.AreaRoutePrefix = AreaRoutePrefix;
