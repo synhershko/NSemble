@@ -56,7 +56,6 @@ namespace NSemble.Modules.Blog.Admin
                 }
 
                 // Set some defaults
-                post.PublishedAt = DateTimeOffset.UtcNow;
                 post.AllowComments = true;
                 
                 var identity = (User)Context.CurrentUser;
@@ -73,8 +72,16 @@ namespace NSemble.Modules.Blog.Admin
                 }
 
                 if ("Publish".Equals(Request.Form["SubmitAction"]))
+                {
                     post.CurrentState = BlogPost.State.Public;
-                
+                    post.PublishedAt = DateTimeOffset.UtcNow;
+                }
+                else
+                {
+                    post.CurrentState = BlogPost.State.Draft;
+                    post.PublishedAt = DateTimeOffset.MinValue;
+                }
+
                 session.Store(post, "BlogPosts/");
                 session.SaveChanges();
 
@@ -121,7 +128,13 @@ namespace NSemble.Modules.Blog.Admin
                 blogPost.LastEditedAt = DateTimeOffset.UtcNow;
 
                 if ("Publish".Equals(Request.Form["SubmitAction"]))
+                {
                     blogPost.CurrentState = BlogPost.State.Public;
+                    if (blogPost.PublishedAt == DateTimeOffset.MinValue)
+                    {
+                        blogPost.PublishedAt = DateTimeOffset.UtcNow;
+                    }
+                }
 
                 session.SaveChanges();
 
