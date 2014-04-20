@@ -162,3 +162,5 @@ input.search:hover {
 	background: url(/content/images/sprites.png) no-repeat top left;
 	background-position: 0 -441px; width: 15px; height: 15px
 }
+
+.entry-content pre { padding: 0}
