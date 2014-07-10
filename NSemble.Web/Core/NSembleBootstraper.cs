@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Configuration;
 using System.Web;
 using NSemble.Web.Core;
 using Nancy;
@@ -53,6 +51,9 @@ namespace NSemble.Core.Nancy
 
         protected override void ConfigureApplicationContainer(global::Nancy.TinyIoc.TinyIoCContainer container)
         {
+            if (ConfigurationManager.AppSettings["DisableDynamicViewLoading"] == "true")
+                NSembleViewLocationProvider.DisableDynamicViewLoading = true;
+
             // TODO: support multiple doc-stores
             var docStore = new DocumentStore { ConnectionStringName = "RavenDB" };
             var conventions = docStore.Conventions;

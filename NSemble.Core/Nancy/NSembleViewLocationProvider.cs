@@ -16,6 +16,8 @@ namespace NSemble.Core.Nancy
 	    private readonly FileSystemViewLocationProvider fsViewLocationProvider;
         private readonly ResourceViewLocationProvider resourcesViewLocationProvider;
 
+        public static bool DisableDynamicViewLoading { get; set; }
+
         public NSembleViewLocationProvider(IRootPathProvider rootPathProvider, global::Nancy.TinyIoc.TinyIoCContainer container)
 		{
             _documentStore = container.Resolve<IDocumentStore>("DocStore");
@@ -43,7 +45,8 @@ namespace NSemble.Core.Nancy
 				sb.Append(s);
 			}
 
-			ViewTemplate[] views;
+			ViewTemplate[] views = null;
+            if (!DisableDynamicViewLoading)
 			using (var session = _documentStore.OpenSession())
 			{
                 // It's probably safe to assume we will have no more than 1024 views, so no reason to bother with paging
@@ -53,7 +56,7 @@ namespace NSemble.Core.Nancy
             // Read the views from the default location
 		    IEnumerable<ViewLocationResult> defaultViews = fsViewLocationProvider.GetLocatedViews(supportedViewExtensions)
 		                                                                         .Concat(resourcesViewLocationProvider.GetLocatedViews(supportedViewExtensions));
-			if (views.Length == 0)
+			if (views == null || views.Length == 0)
 				return defaultViews;
 
             // Views are uniquely identified by their Location, Name and Extension
