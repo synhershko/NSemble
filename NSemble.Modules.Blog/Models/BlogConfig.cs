@@ -12,6 +12,7 @@ namespace NSemble.Modules.Blog.Models
         }
 
         public string BlogTitle { get; set; }
+        public string TagLine { get; set; }
         public string BlogDescription { get; set; }
         public string CopyrightString { get; set; }
         public string OwnerEmail { get; set; }

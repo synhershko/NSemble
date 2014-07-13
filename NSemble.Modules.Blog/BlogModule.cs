@@ -103,8 +103,9 @@ namespace NSemble.Modules.Blog
 
             // Home
             Get["/"] = o =>
-                           {
-                               ((PageModel)Model.Page).Title = blogConfig.BlogDescription;
+            {
+                               ((PageModel)Model.Page).Title = blogConfig.TagLine ?? blogConfig.BlogDescription;
+                               ((PageModel)Model.Page).SubTitle = "Welcome to my blog!";
                                Model.ListTitle = string.Empty;
 
                                return View["BlogHome", GetPosts(session)];
