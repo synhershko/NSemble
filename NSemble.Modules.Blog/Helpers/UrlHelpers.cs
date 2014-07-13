@@ -41,7 +41,7 @@ namespace NSemble.Modules.Blog.Helpers
             return new NonEncodedHtmlString("No comments");
         }
 
-        public static string BlogUrl(string prefix, int? year, int? month, string tag, int? page)
+        public static string BlogUrl(string prefix, int? year, int? month, IEnumerable<string> tags, int? page)
         {
             var sb = new StringBuilder(prefix);
             sb.Append('/');
@@ -55,10 +55,11 @@ namespace NSemble.Modules.Blog.Helpers
                 sb.Append(month.Value.ToString("D2"));
                 sb.Append('/');
             }
-            if (tag != null)
+            if (tags != null)
             {
                 sb.Append("tagged/");
-                sb.Append(tag);
+                sb.Append(string.Join(",", tags));
+                sb.Append('/');
             }
             if (page != null && page > 1)
             {

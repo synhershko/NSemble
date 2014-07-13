@@ -124,8 +124,8 @@ namespace NSemble.Modules.Blog
             Get[@"/(?<year>19[0-9]{2}|2[0-9]{3})/(?<month>0[1-9]|1[012])/page/(?<page>\d+)"] = p => View["ListBlogPosts", GetPosts(session, p.year, p.month, null, p.page)];
 
             // By tag
-            Get[@"/tagged/{tagname}"] = p => View["ListBlogPosts", GetPosts(session, null, null, new[] { (string)p.tagname })];
-            Get[@"/tagged/{tagname}/page/{page?1}"] = p => View["ListBlogPosts", GetPosts(session, null, null, new[] { (string)p.tagname }, (int)p.page)];
+            Get[@"/tagged/{tagname}"] = p => View["ListBlogPosts", GetPosts(session, null, null, ((string)p.tagname ?? "").Split(','))];
+            Get[@"/tagged/{tagname}/page/{page?1}"] = p => View["ListBlogPosts", GetPosts(session, null, null, ((string)p.tagname ?? "").Split(','), (int)p.page)];
 
             // RSS feed
             Get[@"/rss"] = p =>
@@ -177,10 +177,10 @@ namespace NSemble.Modules.Blog
                 postsQuery = postsQuery.Where(x => x.PublishedAt.Year == year);
             }
 
-            if (tags != null)
+            if (tags != null && tags.Any())
             {
                 if (pageHeader == null) pageHeader = new StringBuilder();
-                pageHeader.AppendFormat(" tagged {0}", String.Join(", ", tags));
+                pageHeader.AppendFormat(" tagged \"{0}\"", String.Join("\", \"", tags));
                 foreach (var tag in tags)
                 {
                     postsQuery = postsQuery.Where(x => x.Tags.Any(t => t == tag));
@@ -197,7 +197,7 @@ namespace NSemble.Modules.Blog
             ViewBag.AreaRoutePrefix = AreaRoutePrefix;
             Model.Year = year;
             Model.Month = month;
-
+            Model.Tags = tags;
             Model.BlogPosts = posts;
 
             // Paging info
