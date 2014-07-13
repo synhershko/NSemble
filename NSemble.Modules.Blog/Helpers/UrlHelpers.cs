@@ -34,7 +34,7 @@ namespace NSemble.Modules.Blog.Helpers
             return new NonEncodedHtmlString(sb.ToString());
         }
 
-        public static IHtmlString CommentsCount(this BlogPost post)
+        public static IHtmlString CommentsCountText(this BlogPost post)
         {
             if (post != null && post.CommentsCount > 0)
                 return new NonEncodedHtmlString(string.Format("Comments ({0})", post.CommentsCount));
