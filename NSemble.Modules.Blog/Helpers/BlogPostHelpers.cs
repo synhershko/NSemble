@@ -8,10 +8,10 @@ namespace NSemble.Modules.Blog.Helpers
 {
     public static class BlogPostHelpers
     {
-        public static IHtmlString Gravatar(this PostComments.Comment comment, int size)
+        public static IHtmlString Gravatar(this PostComments.Comment comment, int size, string extras = null)
         {
-            var ret = string.Format(@"<img src=""http://www.gravatar.com/avatar.php?gravatar_id={0}&size={1}&default=identicon"" alt=""{2}"" width=""{1}"" height=""{1}"">"
-                    , GetHashedEmail(comment.Email), size, comment.Author);
+            var ret = string.Format(@"<img src=""http://www.gravatar.com/avatar.php?gravatar_id={0}&size={1}&default=identicon"" alt=""{2}"" style=""width: {1}px; height: {1}px;"" {3}>"
+                    , GetHashedEmail(comment.Email), size, comment.Author, extras);
 
             return new NonEncodedHtmlString(ret);
         }
