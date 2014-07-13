@@ -17,6 +17,7 @@ namespace NSemble.Core.Widgets
 
         public DynamicContentType ContentType { get; set; }
         public string Content { get; set; }
+        public string CachedRenderedContent { get; private set; }
 
         public override dynamic GetViewContent(IDocumentSession session)
         {

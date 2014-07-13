@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NSemble.Core.Extensions;
 using NSemble.Core.Models;
 using NSemble.Modules.Blog.Helpers;
 using NSemble.Modules.Blog.Models;
@@ -82,6 +83,9 @@ namespace NSemble.Modules.Blog.Admin
                     post.PublishedAt = DateTimeOffset.MinValue;
                 }
 
+                // Render and cache the output
+                post.CachedRenderedContent = post.CompiledContent(true).ToHtmlString();
+
                 session.Store(post, "BlogPosts/");
                 session.SaveChanges();
 
@@ -135,6 +139,9 @@ namespace NSemble.Modules.Blog.Admin
                         blogPost.PublishedAt = DateTimeOffset.UtcNow;
                     }
                 }
+
+                // Update the cached rendered page
+                blogPost.CachedRenderedContent = blogPost.CompiledContent(true).ToHtmlString();
 
                 session.SaveChanges();
 

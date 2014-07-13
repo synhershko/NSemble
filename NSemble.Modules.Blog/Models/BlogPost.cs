@@ -26,6 +26,7 @@ namespace NSemble.Modules.Blog.Models
 		public string Title { get; set; }
 		public string Content { get; set; }
 		public DynamicContentType ContentType { get; set; }
+        public string CachedRenderedContent { get; set; }
 		public ICollection<string> Tags { get; set; }
 
 	    public string Slug

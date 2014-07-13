@@ -80,6 +80,8 @@ namespace NSemble.Core.Extensions
         public static IHtmlString CompiledContent(this IDynamicContent contentItem, bool trustContent = false, int cropAt = 0)
         {
             if (contentItem == null) return NonEncodedHtmlString.Empty;
+            if (!string.IsNullOrWhiteSpace(contentItem.CachedRenderedContent))
+                return new NonEncodedHtmlString(contentItem.CachedRenderedContent);
             return CompiledStringContent(contentItem.Content, contentItem.ContentType, trustContent, cropAt);
         }
 

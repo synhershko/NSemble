@@ -42,6 +42,8 @@ namespace NSemble.Modules.ContentPages.Models
             set { }
         }
 
+        public string CachedRenderedContent { get; set; }
+
         public DynamicContentType ContentType { get; set; }
 
         public static string FullContentPageId(string slug)

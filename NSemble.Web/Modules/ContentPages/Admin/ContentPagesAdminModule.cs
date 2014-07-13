@@ -35,6 +35,9 @@ namespace NSemble.Modules.ContentPages.Admin
                                            return View["Edit", cp];
                                        }
 
+                                       // Render and cache the output
+                                       cp.CachedRenderedContent = cp.CompiledContent(true).ToHtmlString();
+
                                        session.Store(cp, pageId);
                                        session.SaveChanges();
 
@@ -59,6 +62,7 @@ namespace NSemble.Modules.ContentPages.Admin
 
                                           cp.Content = input.Content;
                                           cp.ContentType = input.ContentType;
+                                          cp.CachedRenderedContent = cp.CompiledContent(true).ToHtmlString();
                                           cp.Title = input.Title;
                                           cp.LastChanged = DateTimeOffset.Now;
                                           

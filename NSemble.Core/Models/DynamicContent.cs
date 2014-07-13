@@ -11,6 +11,7 @@
     public interface IDynamicContent
     {
         string Content { get; set; }
+        string CachedRenderedContent { get; }
         DynamicContentType ContentType { get; set; }
     }
 
