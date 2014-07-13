@@ -77,13 +77,13 @@ namespace NSemble.Core.Extensions
         static readonly Regex CodeBlockFinder = new Regex(@"\[code lang=(.+?)\s*\](.*?)\[/code\]", RegexOptions.Compiled | RegexOptions.Singleline);
         static readonly Regex FirstLineSpacesFinder = new Regex(@"^(\s|\t)+", RegexOptions.Compiled);
 
-        public static IHtmlString CompiledContent(this IDynamicContent contentItem, bool trustContent = false)
+        public static IHtmlString CompiledContent(this IDynamicContent contentItem, bool trustContent = false, int cropAt = 0)
         {
             if (contentItem == null) return NonEncodedHtmlString.Empty;
-            return CompiledStringContent(contentItem.Content, contentItem.ContentType, trustContent);
+            return CompiledStringContent(contentItem.Content, contentItem.ContentType, trustContent, cropAt);
         }
 
-        public static IHtmlString CompiledStringContent(string content, DynamicContentType contentType, bool trustContent = false)
+        public static IHtmlString CompiledStringContent(string content, DynamicContentType contentType, bool trustContent = false, int cropAt = 0)
         {
             switch (contentType)
             {
@@ -97,6 +97,11 @@ namespace NSemble.Core.Extensions
                         NewWindowForExternalLinks = true,
                         FormatCodeBlock = null,
                     };
+
+                    if (cropAt > 0 && content.Length > cropAt)
+                    {
+                        content = content.Substring(0, cropAt) + "...";
+                    }
 
                     var contents = CodeBlockFinder.Replace(content, match => GenerateCodeBlock(match.Groups[1].Value.Trim(), match.Groups[2].Value));
                     contents = md.Transform(contents);
