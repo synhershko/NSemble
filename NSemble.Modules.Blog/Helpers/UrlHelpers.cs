@@ -34,6 +34,13 @@ namespace NSemble.Modules.Blog.Helpers
             return new NonEncodedHtmlString(sb.ToString());
         }
 
+        public static IHtmlString CommentsCount(this BlogPost post)
+        {
+            if (post != null && post.CommentsCount > 0)
+                return new NonEncodedHtmlString(string.Format("Comments ({0})", post.CommentsCount));
+            return new NonEncodedHtmlString("No comments");
+        }
+
         public static string BlogUrl(string prefix, int? year, int? month, string tag, int? page)
         {
             var sb = new StringBuilder(prefix);
