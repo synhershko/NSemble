@@ -208,7 +208,7 @@ namespace NSemble.Modules.Blog
             if (pageHeader != null)
             {
                 pageHeader.Insert(0, "All blog posts");
-                ((PageModel)Model.Page).Title = Model.ListTitle = pageHeader.ToString();
+                ((PageModel)Model.Page).SubTitle = ((PageModel)Model.Page).Title = Model.ListTitle = pageHeader.ToString();
             }
 
             return Model;
