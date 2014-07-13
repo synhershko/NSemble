@@ -1,6 +1,4 @@
-﻿@using System
-@using System.Linq;
-@using NSemble.Core.Extensions
+﻿@using NSemble.Core.Extensions
 @using NSemble.Modules.Blog.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{
@@ -8,30 +6,38 @@
     var firstPost = true;
 }
 
-@if (!String.IsNullOrWhiteSpace(Model.ListTitle))
-{
-    <h3>@Model.ListTitle</h3>
-}
-
 @if (Model.BlogPosts.Count > 0)
 {
-
     foreach (var post in Model.BlogPosts)
     {
-        var postUrl = UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix);
-        <h3><a href="@postUrl">@post.Title</a></h3>
+        var postUrl = UrlHelpers.ToUrl(post, (string)ViewBag.AreaRoutePrefix);
+        <article class="post">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3 class="post-title"><a href="@postUrl">@post.Title</a></h3>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post, true, firstPost ? 1200 : 300)
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-10 col-md-9 col-sm-8">
+                            <span class="date">@HtmlExtensions.Html5DateTimeTag(post.PublishedAt)</span>
+                            <span class="comments"><a href="@postUrl#comments">@UrlHelpers.CommentsCountText(post)</a></span>
+                            <br /><span class="tags">@UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags)</span>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <a href="@postUrl" class="pull-right">Read more &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
 
-        <div>
-            @if (firstPost)
-            {
-                @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
-            }
-            <small>Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @UrlHelpers.TagLinks((string) ViewBag.AreaRoutePrefix, post.Tags) | <a href="@postUrl#comments">Comments (@post.CommentsCount)</a></small>
-        </div>
-        <hr/>
         if (firstPost)
         {
-            <h3>Other recent posts</h3>
             firstPost = false;
         }
     }

@@ -1,26 +1,39 @@
-﻿@using System
+﻿@using NSemble.Modules.Blog.Helpers
 @using NSemble.Core.Extensions
-@using NSemble.Modules.Blog.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{
     Layout = "_BlogLayout.cshtml";
 }
-
-<h3>@Model.ListTitle</h3>
 
 @if (Model.BlogPosts.Count > 0)
 {
     foreach (var post in Model.BlogPosts)
     {
         var postUrl = UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix);
-        <h3><a href="@postUrl">@post.Title</a></h3>
-
-        <div>
-            @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post)
-
-            <small>Published: @HtmlExtensions.Html5DateTimeTag(post.PublishedAt) under the tags @UrlHelpers.TagLinks((string) ViewBag.AreaRoutePrefix, post.Tags) | <a href="@postUrl#comments">Comments (@post.CommentsCount)</a></small>
-        </div>
-        <hr/>
+        <article class="post">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3 class="post-title"><a href="@postUrl">@post.Title</a></h3>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(post, true, 300)
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-lg-10 col-md-9 col-sm-8">
+                            <span class="date">@HtmlExtensions.Html5DateTimeTag(post.PublishedAt)</span>
+                            <span class="comments"><a href="@postUrl#comments">@UrlHelpers.CommentsCountText(post)</a></span>
+                            <br /><span class="tags">@UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags)</span>
+                        </div>
+                        <div class="col-lg-2 col-md-3 col-sm-4">
+                            <a href="@postUrl" class="pull-right">Read more &raquo;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
     }
 
     <p style="text-align: center">Showing @Model.BlogPosts.Count posts out of @Model.TotalBlogPosts total, page @Model.CurrentPage</p>

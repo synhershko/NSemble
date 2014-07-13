@@ -10,101 +10,104 @@
 }
 
 <article>
-    <small>Posted @HtmlExtensions.Html5DateTimeTag(post.PublishedAt)</small>
-    <h2>@Model.BlogPost.Title</h2>
-
-    <hr />
+    <h1>@Model.BlogPost.Title</h1>
+    <div class="meta">
+        <span class="date">@post.PublishedAt.Html5DateTimeTag()</span>
+        <span class="tags">@UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags)</span>
+        <span class="comments"><a href="#comments">@post.CommentsCountText()</a></span>
+    </div>
 
     @NSemble.Core.Extensions.DynamicContentHelpers.CompiledContent(Model.BlogPost)
 </article>
-<p><small>Tagged @UrlHelpers.TagLinks((string)ViewBag.AreaRoutePrefix, post.Tags)</small></p>
 
-<hr/>
 <section>
     <a name="comments"></a>
-    <p><strong>Comments</strong></p>
     @if (Model.Comments != null)
     {
-        foreach (PostComments.Comment comment in Model.Comments.Comments)
-        {
-            <div class="row">
-                <div class="col-md-1">
-                    @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(comment, 48)
-                </div>
-                
-                <div class="col-md-11">
-                    <small>Posted by @comment.Author on @comment.CreatedAt.Html5DateTimeTag()</small>
-                    @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(comment.Content, DynamicContentType.Markdown, false)
-                </div>
-            </div>
-
-            if (comment.Replies.Any())
+        <h2 class="post-title">Comments</h2>
+        <ul class="list-unstyled">
+            @foreach (PostComments.Comment comment in Model.Comments.Comments)
             {
-                <ul class="comment-replies">
-                    @foreach (var r in comment.Replies)
-                    {
-                        <li>
+                <li class="comment">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(comment, 100, @"class=""imageborder alignleft""")
+                            @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(comment.Content, DynamicContentType.Markdown, false)
+                        </div>
+                        <div class="panel-footer">
                             <div class="row">
-                                <div class="col-md-1 col-md-offset-1 comment-replies-gravatar">
-                                    @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(r, 48)
+                                <div class="col-lg-10 col-md-9 col-sm-8">
+                                    <i class="fa fa-user"> </i> <a href="@comment.Website" rel="nofollow">@comment.Author</a> <i class="fa fa-clock-o"></i> @comment.CreatedAt.Html5DateTimeTag()
                                 </div>
-
-                                <div class="col-md-10">
-                                    <small>Reply posted by @r.Author on @r.CreatedAt.Html5DateTimeTag()</small>
-                                    @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(r.Content, DynamicContentType.Markdown, false)
+                                <div class="col-lg-2 col-md-3 col-sm-4">
+                                    <a href="#" class="pull-right">Reply</a>
                                 </div>
                             </div>
-                        </li>
-                    }
-                </ul>
-            }
+                        </div>
+                    </div>
+                </li>
 
-            <br/>
-        }
-        
-        <hr/>
+                if (comment.Replies.Any())
+                {
+                    <ul class="list-unstyled sub-comments">
+                        @foreach (var r in comment.Replies)
+                        {
+                            <li class="comment">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        @NSemble.Modules.Blog.Helpers.BlogPostHelpers.Gravatar(r, 100, @"class=""imageborder alignleft""")
+                                        @NSemble.Core.Extensions.DynamicContentHelpers.CompiledStringContent(r.Content, DynamicContentType.Markdown, false)
+                                    </div>
+                                    <div class="panel-footer">
+                                        <div class="row">
+                                            <div class="col-lg-10 col-md-9 col-sm-8">
+                                                <i class="fa fa-user"> </i> <a rel="nofollow" href="@r.Website">@r.Author</a> <i class="fa fa-clock-o"></i> @r.CreatedAt.Html5DateTimeTag()
+                                            </div>
+                                            <div class="col-lg-2 col-md-3 col-sm-4">
+                                                <a href="#" class="pull-right">Reply</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        </ul>
     }
+    else
+    { <h2 class="post-title">No comments posted so far</h2> }
+</section>
+
         
     @{
         var postUrl = UrlHelpers.ToUrl(post, (string) ViewBag.AreaRoutePrefix);
         var commentInput = new NSemble.Modules.Blog.Models.PostComments.CommentInput();
     }
+<section class="comment-form">
+    <h2 class="post-title">Leave a Comment</h2>
     <form method="post" action="@postUrl/new-comment">
-        <fieldset>
-            <legend>Add a new comment</legend>
-
-            <div>Name</div>
-            <div>
-                <input type="text" name="Author" value="@commentInput.Author" />
-            </div>
-         
-            <div>E-mail</div>
-            <div>
-                <input type="text" name="Email" value="@commentInput.Email" />
-            </div>
-         
-            <div>Website (optional)</div>
-            <div>
-                <input type="text" name="Website" value="@commentInput.Website" />
-            </div>
-
-            <div>
-                Your comment
-            </div>
-            <div>
-                <textarea name="Body" rows="20" style="width: 500px">@commentInput.Body</textarea>
-            </div>
-	     
-            <div>
-                2 * 4 = ?
-            </div>
-            <div>
-                <input type="text" name="HumanVerification" value="" />
-            </div>
-
-            <p>
-                <input type="submit" value="Post comment" />
-            </p>
-        </fieldset>
+        <div class="form-group">
+            <label for="inputName">Name</label>
+            <input type="text" name="Author" value="@commentInput.Author" class="form-control" id="inputName" placeholder="Your name">
+        </div>
+        <div class="form-group">
+            <label for="inputEmail">Email</label>
+            <input name="Email" value="@commentInput.Email" type="email" class="form-control" id="inputEmail" placeholder="example@example.com">
+        </div>
+        <div class="form-group">
+            <label for="inputName">Website (optional)</label>
+            <input type="text" name="Website" value="@commentInput.Website" class="form-control" id="inputName" placeholder="http://mywebsite.com">
+        </div>
+        <div class="form-group">
+            <label for="inputMessage">Mesagge</label>
+            <textarea class="form-control" id="inputMessage" rows="6" name="Body">@commentInput.Body</textarea>
+        </div>
+        <div class="form-group">
+            <label for="inputName">Human verification</label>
+            <input type="text" name="HumanVerification" value="" class="form-control" id="inputName" placeholder="2 * 4 = ?">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-</section>
+</section>      
