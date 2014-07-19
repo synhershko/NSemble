@@ -1,13 +1,25 @@
 ﻿@using NSemble.Core.Extensions
+@using NSemble.Core.Models
+@using NSemble.Modules.ContentPages.Models
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{
     Layout = "_Layout.cshtml";
+    var cp = Model.ContentPage as ContentPage;
 }
 
-<main>
-    <article>
-        <h1>@Model.ContentPage.Title</h1>
-
-        @DynamicContentHelpers.CompiledContent(Model.ContentPage)          
-    </article>
-</main>
+@if (cp != null)
+{
+    if (cp.ContentType != DynamicContentType.Html)
+    {
+            <main>
+                <article>
+                    <h1>@Model.ContentPage.Title</h1>
+                    @DynamicContentHelpers.CompiledContent(cp, true)
+                </article>
+            </main>
+    }
+    else
+    {
+        @DynamicContentHelpers.CompiledContent(cp, true)
+    }
+}
