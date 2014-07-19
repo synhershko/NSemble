@@ -41,18 +41,16 @@
 
         <div class="container" style="margin-top: 60px">
             @RenderBody()
-
-            <hr>
-
-            <footer id="footer">
-                <p class="pull-right"><a href="#">Back to top</a></p>
-                <div class="links">
-                
-                </div>
-                <a href="https://github.com/synhershko/NSemble" target="_blank">NSemble</a> - assemble this.
-            </footer>
-
         </div>
+        
+        <footer id="footer">
+            <hr/>
+            <p class="pull-right"><a href="#">Back to top</a></p>
+            <div class="links">
+
+            </div>
+            <a href="https://github.com/synhershko/NSemble" target="_blank">NSemble</a> - assemble this.
+        </footer>
         
         @RenderSection("FooterArea", required: false)
     </body>

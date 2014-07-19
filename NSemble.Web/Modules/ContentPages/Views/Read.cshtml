@@ -11,12 +11,14 @@
 {
     if (cp.ContentType != DynamicContentType.Html)
     {
+        <div class="container">
             <main>
                 <article>
                     <h1>@Model.ContentPage.Title</h1>
                     @DynamicContentHelpers.CompiledContent(cp, true)
                 </article>
             </main>
+        </div>
     }
     else
     {
