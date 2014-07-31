@@ -59,6 +59,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.Hosting.Aspnet.0.18.0\lib\net40\Nancy.Hosting.Aspnet.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy.Validation.DataAnnotations">
+      <HintPath>..\packages\Nancy.Validation.DataAnnotations.0.18.0\lib\net40\Nancy.Validation.DataAnnotations.dll</HintPath>
+    </Reference>
     <Reference Include="Nancy.ViewEngines.Razor, Version=0.18.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.Viewengines.Razor.0.18.0\lib\net40\Nancy.ViewEngines.Razor.dll</HintPath>
@@ -490,6 +493,11 @@
     <Compile Include="Modules\ContentPages\Admin\ContentPagesAdminModule.cs" />
     <Compile Include="Modules\ContentPages\ContentPagesModule.cs" />
     <Compile Include="Modules\ContentPages\Models\ContentPage.cs" />
+    <Compile Include="Modules\Forms\FormDataAttribute.cs" />
+    <Compile Include="Modules\Forms\FormsModule.cs" />
+    <Compile Include="Modules\Forms\Models\ContactForm.cs" />
+    <Compile Include="Modules\Forms\Models\Form.cs" />
+    <Compile Include="Modules\Forms\Models\IFormResponse.cs" />
     <Compile Include="Modules\Membership\MembershipModule.cs" />
     <Compile Include="Modules\Membership\Models\LoginInput.cs" />
     <Compile Include="Modules\Welcome\WelcomeModule.cs" />
