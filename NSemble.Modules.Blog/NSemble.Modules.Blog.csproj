@@ -71,6 +71,7 @@
     <Compile Include="Helpers\BlogPostHelpers.cs" />
     <Compile Include="Helpers\RssResponse.cs" />
     <Compile Include="Helpers\UrlHelpers.cs" />
+    <Compile Include="Indexes\TagCloudIndex.cs" />
     <Compile Include="Models\BlogConfig.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\PostComments.cs" />
