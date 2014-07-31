@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
+using NSemble.Core.Extensions;
 using NSemble.Core.Models;
 using NSemble.Core.Nancy;
 using NSemble.Core.Tasks;
@@ -19,7 +19,7 @@ namespace NSemble.Modules.Blog
 {
     public sealed class BlogModule : NSembleModule
     {
-        const int PageSize = 10;
+        const int DefaultPageSize = 10;
 
         public BlogModule(IDocumentSession session)
             : base("Blog")
@@ -165,6 +165,7 @@ namespace NSemble.Modules.Blog
         private dynamic GetPosts(IDocumentSession session, int? year = null, int? month = null, IEnumerable<string> tags = null, int? page = null)
         {
             StringBuilder pageHeader = null;
+            int pageSize = DefaultPageSize;
 
             var postsQuery = session.Query<BlogPost>();
             if (year != null && month != null)
@@ -178,6 +179,7 @@ namespace NSemble.Modules.Blog
                 postsQuery = postsQuery.Where(x => x.PublishedAt.Year == year);
             }
 
+            var sortingOrder = SortOrder.Desc;
             if (tags != null && tags.Any())
             {
                 if (pageHeader == null) pageHeader = new StringBuilder();
@@ -186,13 +188,28 @@ namespace NSemble.Modules.Blog
                 {
                     postsQuery = postsQuery.Where(x => x.Tags.Any(t => t == tag));
                 }
+
+                if (tags.Count() == 1)
+                {
+                    var tagDescriptor = session.Load<TagDescriptor>("Blog/TagDescriptors/" + tags.First());
+                    if (tagDescriptor != null)
+                    {
+                        sortingOrder = tagDescriptor.DefaultSortingOrder;
+                        pageSize = tagDescriptor.PostsPerPage ?? DefaultPageSize;
+                        Model.TagDescription = tagDescriptor.CompiledContent();
+                    }
+                }
             }
+
+            if (sortingOrder == SortOrder.Asc)
+                postsQuery = postsQuery.OrderBy(x => x.PublishedAt);
+            else
+                postsQuery = postsQuery.OrderByDescending(x => x.PublishedAt);
 
             RavenQueryStatistics stats;
             var posts = postsQuery.Where(x => x.CurrentState == BlogPost.State.Public)
-                .OrderByDescending(x => x.PublishedAt)
                 .Statistics(out stats)
-                .Skip(((page ?? 1) - 1) * PageSize).Take(PageSize)
+                .Skip(((page ?? 1) - 1) * pageSize).Take(pageSize)
                 .ToList();
             
             ViewBag.AreaRoutePrefix = AreaRoutePrefix;
@@ -204,7 +221,7 @@ namespace NSemble.Modules.Blog
             // Paging info
             Model.TotalBlogPosts = stats.TotalResults;
             Model.CurrentPage = page ?? 1;
-            Model.PageSize = PageSize;
+            Model.PageSize = pageSize;
 
             if (pageHeader != null)
             {

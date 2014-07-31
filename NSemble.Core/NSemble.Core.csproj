@@ -78,6 +78,7 @@
     <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Extensions\HtmlExtensions.cs" />
     <Compile Include="Models\PageModel.cs" />
+    <Compile Include="Models\SortOrder.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ViewTemplate.cs" />
     <Compile Include="Models\Widget.cs" />

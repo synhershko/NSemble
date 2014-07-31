@@ -75,6 +75,7 @@
     <Compile Include="Models\BlogConfig.cs" />
     <Compile Include="Models\BlogPost.cs" />
     <Compile Include="Models\PostComments.cs" />
+    <Compile Include="Models\TagDescriptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\AddCommentTask.cs" />
     <Compile Include="Widgets\RecentPostsWidget.cs" />
