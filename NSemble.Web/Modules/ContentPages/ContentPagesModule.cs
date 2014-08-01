@@ -13,9 +13,11 @@ namespace NSemble.Modules.ContentPages
         public ContentPagesModule(IDocumentSession session)
             : base("ContentPages")
         {
-            Get["/{slug?" + HomepageSlug + "}"] = p =>
+            Get["/{slug*}"] = p =>
                                  {
                                      var slug = (string)p.slug;
+                                     if (string.IsNullOrWhiteSpace(slug))
+                                         slug = HomepageSlug;
 
                                      // For fastest loading, we define the content page ID to be the slug. Therefore, slugs have to be < 50 chars, probably
                                      // much shorter for readability.
