@@ -98,6 +98,14 @@ namespace NSemble.Core.Extensions
                         SafeMode = false,
                         NewWindowForExternalLinks = true,
                         FormatCodeBlock = null,
+                        PrepareImage = (tag, b) =>
+                        {
+                            string style = string.Empty;
+                            tag.attributes.TryGetValue("style", out style);
+                            style += "max-width:100%;";
+                            tag.attributes["style"] = style;
+                            return true;
+                        },
                     };
 
                     if (cropAt > 0 && content.Length > cropAt)
